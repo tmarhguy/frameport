@@ -1,0 +1,130 @@
+{
+  "name": "frameport",
+  "displayName": "FramePort",
+  "description": "View HDMI capture and other local video sources inside VS Code. Inspect FPGA output, take screenshots and record clips.",
+  "version": "0.2.0",
+  "publisher": "tmarhguy",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./src/extension.js",
+  "extensionKind": [
+    "ui"
+  ],
+  "activationEvents": [
+    "onCommand:frameport.open"
+  ],
+  "scripts": {
+    "check": "node scripts/check.js",
+    "test": "node --test test/*.test.js",
+    "test:ui": "node scripts/test-ui.js",
+    "test:host": "node scripts/test-host.js",
+    "package": "vsce package --no-dependencies --skip-license",
+    "package:public": "vsce package --no-dependencies"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "frameport.open",
+        "title": "FramePort: Open Capture Device"
+      },
+      {
+        "command": "frameport.device",
+        "title": "FramePort: Select Device"
+      },
+      {
+        "command": "frameport.screenshot",
+        "title": "FramePort: Take Screenshot"
+      },
+      {
+        "command": "frameport.restart",
+        "title": "FramePort: Restart Stream"
+      },
+      {
+        "command": "frameport.stop",
+        "title": "FramePort: Stop Stream"
+      },
+      {
+        "command": "frameport.diagnostics",
+        "title": "FramePort: Show Diagnostics"
+      },
+      {
+        "command": "frameport.record",
+        "title": "FramePort: Start / Stop Recording"
+      },
+      {
+        "command": "frameport.lastCapture",
+        "title": "FramePort: Show Last Capture"
+      }
+    ],
+    "configuration": {
+      "title": "FramePort",
+      "properties": {
+        "frameport.ffmpegPath": {
+          "type": "string",
+          "default": "ffmpeg",
+          "scope": "machine",
+          "description": "Path to an existing FFmpeg executable. On Apple Silicon, commonly /opt/homebrew/bin/ffmpeg."
+        },
+        "frameport.previewFps": {
+          "type": "number",
+          "enum": [
+            15,
+            30,
+            60
+          ],
+          "default": 30,
+          "description": "Maximum requested preview refresh rate. Lower values reduce preview work; source capture and recording are independent."
+        },
+        "frameport.recordingEncoder": {
+          "type": "string",
+          "enum": [
+            "software",
+            "hardware"
+          ],
+          "default": "software",
+          "description": "Recording encoder. Software (libx264) makes smaller files and works everywhere. Hardware (VideoToolbox on macOS) can lower CPU while recording but makes larger files; falls back with an actionable error when unavailable."
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@vscode/vsce": "^3.9.2"
+  },
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tmarhguy/frameport.git"
+  },
+  "homepage": "https://github.com/tmarhguy/frameport#readme",
+  "bugs": {
+    "url": "https://github.com/tmarhguy/frameport/issues"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "HDMI",
+    "hdmi capture",
+    "capture card",
+    "USB capture",
+    "UVC",
+    "USB",
+    "FPGA",
+    "capture",
+    "camera",
+    "video"
+  ],
+  "preview": true,
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "FramePort launches a local FFmpeg capture process."
+    },
+    "virtualWorkspaces": {
+      "supported": false
+    }
+  }
+}
