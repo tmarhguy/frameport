@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 — 2026-09-13
+
+- Marketplace listing refresh only: description, install flow, badges, and public-preview wording. No runtime changes since 0.2.0.
+
 ## 0.2.0 — 2026-09-13
 
 - Added silent MP4 source recording, elapsed state, bounded frame delivery and finalization on capture teardown.
