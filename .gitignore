@@ -3,3 +3,4 @@ node_modules/
 .DS_Store
 artifacts/
 .local/
+/docs/log/.obsidian
