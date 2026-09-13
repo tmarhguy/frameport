@@ -63,7 +63,7 @@ I needed to see my [Tomato](https://tomato.tmarhguy.com) FPGA's HDMI output whil
 - **FFmpeg** with `libx264` on PATH. FramePort also checks `/opt/homebrew/bin/ffmpeg` and `/usr/local/bin/ffmpeg` on macOS, or set `frameport.ffmpegPath`.
 - Camera and screen-recording permission when macOS asks.
 
-Available as a preview on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=tmarhguy.frameport).
+FramePort is in public preview. Device capture is currently tested on macOS; Windows and Linux support is under development.
 
 ## Get started
 
