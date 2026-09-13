@@ -1,7 +1,7 @@
 {
   "name": "frameport",
   "displayName": "FramePort",
-  "description": "View HDMI capture and other local video sources inside VS Code. Inspect FPGA output, take screenshots and record clips.",
+  "description": "View, inspect, screenshot and record local video sources (HDMI) inside VS Code.",
   "version": "0.2.0",
   "publisher": "tmarhguy",
   "engines": {
@@ -105,7 +105,7 @@
   "bugs": {
     "url": "https://github.com/tmarhguy/frameport/issues"
   },
-  "license": "UNLICENSED",
+  "license": "SEE LICENSE IN LICENSE",
   "keywords": [
     "HDMI",
     "hdmi capture",

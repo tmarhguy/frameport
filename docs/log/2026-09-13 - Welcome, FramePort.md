@@ -6,7 +6,7 @@ At first, that meant keeping an external monitor nearby. A USB capture card was 
 
 Now the video sits in an editor tab beside the code. That small change makes working on the hardware much easier: I can change something, look at the output, and keep going.
 
-![Tomato OS displayed through FramePort](../images/tomato-live.png)
+<img src="../images/tomato-live.png" alt="Tomato OS displayed through FramePort" width="70%">
 
 *The FPGA running Tomato OS, viewed through the USB capture card inside FramePort.*
 

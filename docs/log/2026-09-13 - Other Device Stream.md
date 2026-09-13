@@ -2,7 +2,7 @@
 
 FramePort does not need to be limited to HDMI capture cards. The source picker can also show cameras and screen sources exposed by macOS.
 
-![Available sources in FramePort](../images/source-picker.png)
+<img src="../images/source-picker.png" alt="Available sources in FramePort" width="70%">
 
 *USB video, built-in and iPhone cameras, a screen source, and the test pattern. The list depends on the connected devices and what macOS exposes.*
 

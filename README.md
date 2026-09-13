@@ -116,4 +116,4 @@ See [CHANGELOG.md](https://github.com/tmarhguy/frameport/blob/main/CHANGELOG.md)
 
 ## Author and license
 
-Built by [Tyrone Marhguy](https://tmarhguy.com) from the [Tomato](https://github.com/tmarhguy/tomato) workflow. No distribution terms selected yet (`UNLICENSED`); no open-source license granted by this preview.
+Built by [Tyrone Marhguy](https://tmarhguy.com) from the [Tomato](https://github.com/tmarhguy/tomato) workflow. Preview use only, all rights reserved — see [LICENSE](https://github.com/tmarhguy/frameport/blob/main/LICENSE). No open-source license granted by this preview.
