@@ -3,6 +3,8 @@
 
 <p align="center">
   <a href="https://github.com/tmarhguy/frameport/actions/workflows/ci.yml"><img src="https://github.com/tmarhguy/frameport/actions/workflows/ci.yml/badge.svg" alt="CI: Validate extension" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=tmarhguy.frameport"><img src="https://img.shields.io/visual-studio-marketplace/v/tmarhguy.frameport?style=flat-square" alt="Marketplace version" /></a>
+  <img src="https://img.shields.io/visual-studio-marketplace/i/tmarhguy.frameport?style=flat-square" alt="Marketplace installs" />
   <img src="https://img.shields.io/badge/release-0.2.0_preview-636363?style=flat-square" alt="Release: 0.2.0 preview" />
   <img src="https://img.shields.io/badge/VS_Code-1.95%2B-007ACC?style=flat-square" alt="VS Code 1.95 or newer" />
   <img src="https://img.shields.io/badge/HDMI-USB_capture-990000?style=flat-square" alt="HDMI USB capture" />
@@ -61,11 +63,11 @@ I needed to see my [Tomato](https://tomato.tmarhguy.com) FPGA's HDMI output whil
 - **FFmpeg** with `libx264` on PATH. FramePort also checks `/opt/homebrew/bin/ffmpeg` and `/usr/local/bin/ffmpeg` on macOS, or set `frameport.ffmpegPath`.
 - Camera and screen-recording permission when macOS asks.
 
-Preview candidate, not a Marketplace release.
+Available as a preview on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=tmarhguy.frameport).
 
 ## Get started
 
-1. In VS Code run **Extensions: Install from VSIX…** and select `frameport-0.2.0.vsix`.
+1. Install FramePort from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=tmarhguy.frameport) (Extensions view → search `FramePort`), or via **Extensions: Install from VSIX…** with `frameport-0.2.0.vsix`.
 2. Run **FramePort: Open Capture Device** → **Select device**, or **Test pattern** to verify without hardware.
 3. Pick a capture mode your device supports. Allow camera access if macOS asks.
 4. Use Pause, Screenshot, Record, Focus, and Diagnostics from the panel toolbar or Command Palette.
