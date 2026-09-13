@@ -23,6 +23,8 @@ npm run test:ui
 npm run package
 ```
 
+Private-preview exception: while the repository is private, install locally with `npm run package:local` (adds `--no-rewrite-relative-links`) so the Extension Details page resolves the packaged `media/screenshots/` images offline. `vsce` otherwise rewrites relative image paths to GitHub raw URLs, which 404 for private repos. At public release, use the standard `npm run package` flow and point the README back at `docs/images/`.
+
 The private preview command bypasses a missing license file. After terms are selected, use `npm run package:public` instead. Inspect the actual archive, not only its filename:
 
 ```sh

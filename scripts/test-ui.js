@@ -62,6 +62,9 @@ const assert = require('node:assert/strict');
     assert.ok(await page.evaluate(() => window.messages.some(message => message.command === 'record')));
     await post({ type: 'recording', phase: 'saved' });
     await post({ type: 'selection', device: 'Capture screen 0', mode: '1280 × 720 · 30 fps', screen: true, fps: 30 });
+    // postMessage delivery is async: wait for the handler before asserting,
+    // or a slow runner still sees the initial button label and flakes.
+    await page.waitForFunction(() => document.querySelector('#mode').textContent === 'Native size · 30 fps');
     assert.equal(await page.locator('#mode').isDisabled(), false);
     assert.equal(await page.locator('#mode').textContent(), 'Native size · 30 fps');
     await page.locator('#mode').click();
@@ -77,6 +80,7 @@ const assert = require('node:assert/strict');
     await page.evaluate(() => { const canvas = document.querySelector('#preview'); canvas.width = 320; canvas.height = 240; window.messages.length = 0; });
     await page.locator('#pause').click();
     await post({ type: 'selection', device: 'USB Video', mode: '1280 × 720 · 30 fps', screen: false });
+    await page.waitForFunction(() => document.querySelector('#mode').textContent === '1280 × 720 · 30 fps');
     assert.equal(await page.locator('#mode').isDisabled(), false);
     assert.equal(await page.locator('#mode').textContent(), '1280 × 720 · 30 fps');
     await page.locator('#pause').click();

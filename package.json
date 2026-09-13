@@ -23,6 +23,7 @@
     "test:ui": "node scripts/test-ui.js",
     "test:host": "node scripts/test-host.js",
     "package": "vsce package --no-dependencies --skip-license",
+    "package:local": "vsce package --no-dependencies --skip-license --no-rewrite-relative-links",
     "package:public": "vsce package --no-dependencies"
   },
   "contributes": {
