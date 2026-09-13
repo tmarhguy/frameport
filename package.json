@@ -2,7 +2,7 @@
   "name": "frameport",
   "displayName": "FramePort",
   "description": "View, inspect, screenshot and record local video sources (HDMI) inside VS Code.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "tmarhguy",
   "engines": {
     "vscode": "^1.95.0"

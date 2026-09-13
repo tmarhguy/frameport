@@ -6,7 +6,7 @@ I want as little friction as possible between noticing something and saving it. 
 
 FramePort now saves the displayed frame as PNG and records the active source as a silent MP4. Pausing the preview lets me inspect a frame; it does not pause recording. That distinction matters when I want to study one image without losing what happens next.
 
-<img src="../images/focus-recording.png" alt="Recording indicator in FramePort focus mode" width="70%">
+<img src="../images/preview-light.png" alt="Recording indicator in FramePort focus mode" width="70%">
 
 *Focus mode with the recording badge, captured from the synthetic test-pattern harness with an injected recording state — not a hardware recording.*
 
