@@ -2,7 +2,7 @@
   "name": "frameport",
   "displayName": "FramePort",
   "description": "View, inspect, screenshot and record local video sources (HDMI) inside VS Code.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "publisher": "tmarhguy",
   "engines": {
     "vscode": "^1.95.0"
@@ -22,6 +22,8 @@
     "test": "node --test test/*.test.js",
     "test:ui": "node scripts/test-ui.js",
     "test:host": "node scripts/test-host.js",
+    "test:ffmpeg-missing": "node scripts/test-ffmpeg-missing.js",
+    "test:ffmpeg-missing:docker": "docker build -f docker/ffmpeg-missing/Dockerfile -t frameport-ffmpeg-missing . && docker run --rm frameport-ffmpeg-missing",
     "package": "vsce package --no-dependencies --skip-license",
     "package:local": "vsce package --no-dependencies --skip-license --no-rewrite-relative-links",
     "package:public": "vsce package --no-dependencies"
@@ -88,6 +90,39 @@
           ],
           "default": "software",
           "description": "Recording encoder. Software (libx264) makes smaller files and works everywhere. Hardware (VideoToolbox on macOS) can lower CPU while recording but makes larger files; falls back with an actionable error when unavailable."
+        },
+        "frameport.saveRoot": {
+          "type": "string",
+          "default": "media",
+          "description": "Root folder for autosaved captures. Relative paths are resolved from the first workspace folder; absolute paths are used as-is. With no workspace, captures go under ~/FramePort."
+        },
+        "frameport.screenshotFolder": {
+          "type": "string",
+          "default": "screenshots",
+          "description": "Subfolder under saveRoot for PNG screenshots."
+        },
+        "frameport.videoFolder": {
+          "type": "string",
+          "default": "videos",
+          "description": "Subfolder under saveRoot for MP4 recordings."
+        },
+        "frameport.saveMode": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "ask"
+          ],
+          "default": "auto",
+          "description": "auto writes screenshots and recordings into the configured folders without a dialog. ask shows the save dialog (still defaulting into those folders)."
+        },
+        "frameport.filenameStyle": {
+          "type": "string",
+          "enum": [
+            "timestamp",
+            "sequential"
+          ],
+          "default": "timestamp",
+          "description": "timestamp uses frameport-YYYYMMDD-HHMMSS. sequential uses frameport-0001, frameport-0002, …. Existing files are never overwritten."
         }
       }
     }
@@ -118,7 +153,7 @@
     "camera",
     "video"
   ],
-  "preview": true,
+  "preview": false,
   "capabilities": {
     "untrustedWorkspaces": {
       "supported": false,

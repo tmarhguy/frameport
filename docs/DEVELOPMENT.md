@@ -19,6 +19,21 @@ Press F5 to open an Extension Development Host. `npm run test:host` runs the syn
 
 Set `FRAMEPORT_TEST_FFMPEG` and, if necessary, `FRAMEPORT_TEST_FFPROBE` to override test executable paths. Test actual hardware separately with one application owning the device.
 
+### Missing-FFmpeg recovery (do not uninstall host FFmpeg)
+
+Automated smoke (host FFmpeg stays installed; the suite uses a nonexistent path and a mocked VS Code API):
+
+```sh
+npm run test:ffmpeg-missing
+```
+
+Same checks inside a Linux container that has Node but no FFmpeg binary:
+
+```sh
+npm run test:ffmpeg-missing:docker
+```
+
+To see the real Extension Host modal without uninstalling Homebrew FFmpeg: open Settings → set `frameport.ffmpegPath` to `/nonexistent-frameport-ffmpeg`, run **FramePort: Open Capture Device** or **Test pattern**, then restore the setting (or clear it) afterward.
 ## Architecture
 
 ```text
