@@ -61,6 +61,8 @@ class CaptureSession {
       child.once('error', error => {
         if (generation !== this.generation) return;
         launchError = true;
+        clearInterval(this.watchdog);
+        this.child = undefined;
         this.emit('error', `Could not launch FFmpeg: ${error.message}. Open settings to check its path.`);
       });
       child.once('close', code => {

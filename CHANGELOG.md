@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.2 — 2026-09-18
+
+- When FFmpeg is missing, offer Install via Homebrew on macOS (Terminal after confirm), an install guide, or Open Settings instead of a dead-end error.
+- Leave the Marketplace preview channel (`preview: false`).
+- Screenshots and recordings autosave under `media/screenshots` and `media/videos` (workspace-relative; `~/FramePort` with no folder open) using dated `frameport-YYYYMMDD-HHMMSS` names; never overwrites.
+- Added settings: `saveRoot`, `screenshotFolder`, `videoFolder`, `saveMode` (`auto` / `ask`), and `filenameStyle` (`timestamp` / `sequential`).
+
 ## 0.2.1 — 2026-09-13
 
 - Marketplace listing refresh only: description, install flow, badges, and public-preview wording. No runtime changes since 0.2.0.

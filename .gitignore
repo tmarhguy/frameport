@@ -4,3 +4,5 @@ node_modules/
 artifacts/
 .local/
 /docs/log/.obsidian
+media/videos/
+media/screenshots/frameport-*

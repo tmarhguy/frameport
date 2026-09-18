@@ -1,12 +1,15 @@
 const vscode = require('vscode');
 const http = require('node:http');
 const { randomBytes } = require('node:crypto');
-const { existsSync } = require('node:fs');
+const { existsSync, mkdirSync } = require('node:fs');
+const { dirname } = require('node:path');
 const { enumerate } = require('./capture');
 const { CaptureSession } = require('./session');
 const { renderView } = require('./view');
 const { Recorder } = require('./recorder');
 const { validateScreenshotData, lastCaptureAction } = require('./screenshot');
+const { resolveFfmpegPath, isMissingFFmpegError, offerFFmpegHelp, reportFFmpegProblem } = require('./ffmpeg');
+const { buildCapturePath, readSaveConfig } = require('./paths');
 
 const modes = [
   { label: '1280 × 720 · 30 fps', size: '1280x720', fps: 30 },
@@ -24,12 +27,7 @@ function activate(context) {
   let screenFps = [15, 30, 60].includes(storedScreenFps) ? storedScreenFps : 30;
   const log = vscode.window.createOutputChannel('FramePort');
   function executable() {
-    const configured = vscode.workspace.getConfiguration('frameport').get('ffmpegPath', 'ffmpeg');
-    if (configured !== 'ffmpeg') return configured;
-    if (process.platform === 'darwin') {
-      for (const path of ['/opt/homebrew/bin/ffmpeg', '/usr/local/bin/ffmpeg']) if (existsSync(path)) return path;
-    }
-    return configured;
+    return resolveFfmpegPath(vscode.workspace.getConfiguration('frameport').get('ffmpegPath', 'ffmpeg'));
   }
   const post = message => panel?.webview.postMessage(message);
   function recordingEncoder() {
@@ -43,16 +41,39 @@ function activate(context) {
       rememberCapture(vscode.Uri.file(state.path));
       void vscode.window.showInformationMessage(`FramePort: Recording saved.${state.dropped ? ` ${state.dropped} frames skipped to keep capture responsive.` : ''}`, 'Show file').then(action => { if (action) void vscode.commands.executeCommand('revealFileInOS', vscode.Uri.file(state.path)); });
     }
-    if (state.phase === 'error') void vscode.window.showErrorMessage(`FramePort: Recording failed. ${state.error}`);
+    if (state.phase === 'error') {
+      if (isMissingFFmpegError(state.error)) void offerFFmpegHelp(vscode, { detail: state.error });
+      else void vscode.window.showErrorMessage(`FramePort: Recording failed. ${state.error}`);
+    }
   } });
   const session = new CaptureSession({ executable, onState: state => {
     post({ type: 'state', ...state });
     if (state.phase === 'error' || state.phase === 'waiting') void recorder.stop();
+    if (state.phase === 'error' && isMissingFFmpegError(state.text)) void offerFFmpegHelp(vscode, { detail: state.text });
   }, onLog: text => log.append(text), onFrame: frame => recorder.push(frame), beforeTransition: () => recorder.stop() });
   function rememberCapture(uri) {
     lastCapture = uri.toString();
     void context.globalState.update('lastCapture', lastCapture);
     post({ type: 'savedCapture', available: true });
+  }
+  function saveOptions(kind) {
+    const config = readSaveConfig(key => vscode.workspace.getConfiguration(key));
+    const workspaceFolders = vscode.workspace.workspaceFolders || [];
+    const fsPath = buildCapturePath({ kind, ...config, workspaceFolders });
+    return { ...config, fsPath, uri: vscode.Uri.file(fsPath) };
+  }
+  async function chooseCaptureUri(kind, filters) {
+    const planned = saveOptions(kind);
+    if (planned.saveMode === 'auto') {
+      mkdirSync(dirname(planned.fsPath), { recursive: true });
+      return planned.uri;
+    }
+    mkdirSync(dirname(planned.fsPath), { recursive: true });
+    const uri = await vscode.window.showSaveDialog({ filters, defaultUri: planned.uri });
+    if (!uri) return undefined;
+    if (uri.scheme !== 'file') throw new Error(kind === 'video' ? 'Recordings must be saved to a local file.' : 'Screenshots must be saved to a local file.');
+    mkdirSync(dirname(uri.fsPath), { recursive: true });
+    return uri;
   }
   async function toggleRecord() {
     if (recorder.active) { await recorder.stop(); return; }
@@ -61,9 +82,8 @@ function activate(context) {
     recordDialog = true;
     const generation = session.generation;
     try {
-      const uri = await vscode.window.showSaveDialog({ filters: { 'MP4 video': ['mp4'] }, defaultUri: vscode.Uri.file(require('node:path').join(require('node:os').homedir(), `frameport-${Date.now()}.mp4`)) });
+      const uri = await chooseCaptureUri('video', { 'MP4 video': ['mp4'] });
       if (!uri) return;
-      if (uri.scheme !== 'file') throw new Error('Recordings must be saved to a local file.');
       if (existsSync(uri.fsPath)) throw new Error('Choose a new filename; recording does not overwrite existing files.');
       if (!panel || generation !== session.generation || !session.latest) throw new Error('The source changed. Start recording again.');
       recorder.start(uri.fsPath, session.latest.data);
@@ -99,7 +119,7 @@ function activate(context) {
       try {
         const devices = await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: 'FramePort: finding capture devices…' }, () => enumerate(executable()));
         choices.push(...devices.map(d => ({ ...d, label: d.name, description: d.screen ? 'Screen · requires screen recording permission' : `Video device ${d.index}` })));
-      } catch (error) { vscode.window.showErrorMessage(`FramePort: ${error.message}. Check FFmpeg in settings.`); }
+      } catch (error) { void reportFFmpegProblem(vscode, error, `${error.message}. Check FFmpeg in settings.`); }
     }
     if (request !== selection || owner !== panel) return;
     choices.push({ label: 'Test pattern', name: 'Test pattern', demo: true, description: 'No camera required' });
@@ -162,12 +182,16 @@ function activate(context) {
         // or invalid captures produce a visible error instead of disappearing.
         const checked = validateScreenshotData(message.data);
         if (!checked.ok) { vscode.window.showErrorMessage(`FramePort: Screenshot failed. ${checked.error}`); break; }
-        const uri = await vscode.window.showSaveDialog({ filters: { 'PNG image': ['png'] }, defaultUri: vscode.Uri.file(require('node:path').join(require('node:os').homedir(), `frameport-${Date.now()}.png`)) });
+        let uri;
+        try { uri = await chooseCaptureUri('screenshot', { 'PNG image': ['png'] }); }
+        catch (error) { vscode.window.showErrorMessage(`FramePort: ${error.message}`); break; }
         if (!uri) break;
-        if (uri.scheme !== 'file') { vscode.window.showErrorMessage('FramePort: Screenshots must be saved to a local file.'); break; }
+        if (existsSync(uri.fsPath)) { vscode.window.showErrorMessage('FramePort: That file already exists. Choose a new filename.'); break; }
         await vscode.workspace.fs.writeFile(uri, checked.bytes);
         rememberCapture(uri);
-        vscode.window.showInformationMessage('FramePort: Screenshot saved.');
+        void vscode.window.showInformationMessage('FramePort: Screenshot saved.', 'Show file').then(action => {
+          if (action) void vscode.commands.executeCommand('revealFileInOS', uri);
+        });
         break;
       }
     }
