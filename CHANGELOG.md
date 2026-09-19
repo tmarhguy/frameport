@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.3 — 2026-09-18
+
+- Marketplace / Open VSX listing fix: README screenshots use stable `raw.githubusercontent.com` URLs so images render on both stores and in the Extensions details view.
+- Repackage with a vsce-shaped VSIX (normalized `readme.md` / `LICENSE.txt`, no empty zip dirs) so Marketplace and Open VSX accept the same artifact.
+
 ## 0.2.2 — 2026-09-18
 
 - When FFmpeg is missing, offer Install via Homebrew on macOS (Terminal after confirm), an install guide, or Open Settings instead of a dead-end error.
