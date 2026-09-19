@@ -5,7 +5,7 @@
   <a href="https://github.com/tmarhguy/frameport/actions/workflows/ci.yml"><img src="https://github.com/tmarhguy/frameport/actions/workflows/ci.yml/badge.svg" alt="CI: Validate extension" /></a>
   <a href="https://marketplace.visualstudio.com/items?itemName=tmarhguy.frameport"><img src="https://img.shields.io/visual-studio-marketplace/v/tmarhguy.frameport?style=flat-square" alt="Marketplace version" /></a>
   <a href="https://open-vsx.org/extension/tmarhguy/frameport"><img src="https://img.shields.io/open-vsx/v/tmarhguy/frameport?style=flat-square" alt="Open VSX version" /></a>
-  <img src="https://img.shields.io/badge/release-0.2.2-636363?style=flat-square" alt="Release: 0.2.2" />
+  <img src="https://img.shields.io/badge/release-0.2.3-636363?style=flat-square" alt="Release: 0.2.3" />
   <img src="https://img.shields.io/badge/VS_Code-1.95%2B-007ACC?style=flat-square" alt="VS Code 1.95 or newer" />
   <img src="https://img.shields.io/badge/hardware_capture-macOS-333333?style=flat-square" alt="Hardware capture: macOS" />
 </p>
@@ -14,8 +14,8 @@ FramePort opens an HDMI capture card or other USB video device in an editor tab.
 
 <table align="center">
   <tr>
-    <td align="center" width="50%"><img src="media/screenshots/tomato-live.png" alt="Tomato OS running on an FPGA, viewed through FramePort" /></td>
-    <td align="center" width="50%"><img src="media/screenshots/preview-light.png" alt="FramePort panel in the high-contrast theme" /></td>
+    <td align="center" width="50%"><img src="https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/tomato-live.png" alt="Tomato OS running on an FPGA, viewed through FramePort" /></td>
+    <td align="center" width="50%"><img src="https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/preview-light.png" alt="FramePort panel in the high-contrast theme" /></td>
   </tr>
   <tr>
     <td align="center"><em>Tomato OS through a USB capture card; requested settings and observed FPS shown separately.</em></td>
@@ -25,8 +25,8 @@ FramePort opens an HDMI capture card or other USB video device in an editor tab.
 
 <table align="center">
   <tr>
-    <td align="center" width="50%"><img src="media/screenshots/source-picker.png" alt="FramePort source picker" /><br /><em>Pick a source; a phone camera is not screen mirroring.</em></td>
-    <td align="center" width="50%"><img src="media/screenshots/capture-modes.png" alt="Requested capture modes" /><br /><em>Requested modes, not probed capabilities.</em></td>
+    <td align="center" width="50%"><img src="https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/source-picker.png" alt="FramePort source picker" /><br /><em>Pick a source; a phone camera is not screen mirroring.</em></td>
+    <td align="center" width="50%"><img src="https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/capture-modes.png" alt="Requested capture modes" /><br /><em>Requested modes, not probed capabilities.</em></td>
   </tr>
 </table>
 
@@ -65,10 +65,10 @@ Device capture is currently tested on macOS; Windows and Linux support is under 
 
 ## Get started
 
-1. Install **0.2.2** from either store:
+1. Install **0.2.3** from either store:
    - [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=tmarhguy.frameport) (Extensions view → search `FramePort`)
    - [Open VSX](https://open-vsx.org/extension/tmarhguy/frameport) (Cursor, VSCodium, and other Open VSX clients)
-   - Or **Extensions: Install from VSIX…** with `frameport-0.2.2.vsix`
+   - Or **Extensions: Install from VSIX…** with `frameport-0.2.3.vsix`
 2. Run **FramePort: Open Capture Device** → **Select device**, or **Test pattern** to verify without hardware.
 3. Pick a capture mode your device supports. Allow camera access if macOS asks.
 4. Use Pause, Screenshot, Record, Focus, and Diagnostics from the panel toolbar or Command Palette.
@@ -122,7 +122,7 @@ Install the VSIX via **Extensions: Install from VSIX…**, or press **F5** to ha
 
 ## Release Notes
 
-See [CHANGELOG.md](https://github.com/tmarhguy/frameport/blob/main/CHANGELOG.md): `0.2.2` adds missing-FFmpeg recovery, leaves the Marketplace preview channel, and autosaves captures under `media/`; `0.2.1` refreshes the listing; `0.2.0` adds MP4 recording, native-size screen sources, an optional VideoToolbox encoder, and hardened save handling.
+See [CHANGELOG.md](https://github.com/tmarhguy/frameport/blob/main/CHANGELOG.md): `0.2.3` fixes store listing images and packaging; `0.2.2` adds missing-FFmpeg recovery, leaves the Marketplace preview channel, and autosaves captures under `media/`; `0.2.1` refreshes the listing; `0.2.0` adds MP4 recording, native-size screen sources, an optional VideoToolbox encoder, and hardened save handling.
 
 ## Author and license
 
