@@ -1,26 +1,43 @@
 const { spawn } = require('node:child_process');
 
 // FFmpeg emits device diagnostics on stderr, including for successful enumeration.
-function parseDevices(text, includeScreens = false) {
-  let video = false;
+function parseDevices(text, includeScreens = false, platform = process.platform) {
   const devices = [];
-  for (const line of text.split(/\r?\n/)) {
-    if (line.includes('AVFoundation video devices:')) { video = true; continue; }
-    if (line.includes('AVFoundation audio devices:')) video = false;
-    const match = video && line.match(/\[(\d+)\]\s+(.+)$/);
-    if (match && (includeScreens || !match[2].startsWith('Capture screen'))) devices.push({ index: match[1], name: match[2].trim(), ...(match[2].startsWith('Capture screen') ? { screen: true } : {}) });
+  if (platform === 'win32') {
+    for (const line of text.split(/\r?\n/)) {
+      const dshowMatch = line.match(/\]\s+"([^"]+)"\s+\(video\)/);
+      if (dshowMatch) {
+        devices.push({ index: `video=${dshowMatch[1]}`, name: dshowMatch[1] });
+      }
+    }
+  } else {
+    let video = false;
+    for (const line of text.split(/\r?\n/)) {
+      if (line.includes('AVFoundation video devices:')) { video = true; continue; }
+      if (line.includes('AVFoundation audio devices:')) { video = false; continue; }
+      const match = video && line.match(/\[(\d+)\]\s+(.+)$/);
+      if (match && (includeScreens || !match[2].startsWith('Capture screen'))) {
+        devices.push({ index: match[1], name: match[2].trim(), ...(match[2].startsWith('Capture screen') ? { screen: true } : {}) });
+      }
+    }
   }
   return devices;
 }
 
-function enumerate(executable) {
+function enumerate(executable, platform = process.platform) {
   return new Promise((resolve, reject) => {
-    const child = spawn(executable, ['-hide_banner', '-f', 'avfoundation', '-list_devices', 'true', '-i', ''], { stdio: ['ignore', 'ignore', 'pipe'] });
+    let format = 'avfoundation';
+    if (platform === 'win32') format = 'dshow';
+    else if (platform === 'linux') format = 'v4l2';
+
+    const input = platform === 'win32' ? 'dummy' : '';
+
+    const child = spawn(executable, ['-hide_banner', '-f', format, '-list_devices', 'true', '-i', input], { stdio: ['ignore', 'ignore', 'pipe'] });
     let output = '';
     const timer = setTimeout(() => { child.kill('SIGKILL'); reject(new Error('Device discovery timed out.')); }, 8000);
     child.stderr.on('data', data => { output = (output + data).slice(-65536); });
     child.once('error', error => { clearTimeout(timer); reject(error); });
-    child.once('close', () => { clearTimeout(timer); resolve(parseDevices(output, true)); });
+    child.once('close', () => { clearTimeout(timer); resolve(parseDevices(output, true, platform)); });
   });
 }
 
@@ -44,11 +61,19 @@ class JpegParser {
   }
 }
 
-function captureArgs(device, mode) {
-  const input = device.demo
-    ? ['-re', '-f', 'lavfi', '-i', `testsrc2=size=${mode.size}:rate=${mode.fps}`]
-    : ['-f', 'avfoundation', '-framerate', String(mode.fps), ...(device.screen ? [] : ['-video_size', mode.size]), '-i', `${device.index}:none`];
-  return ['-hide_banner', '-loglevel', 'warning', ...input, '-an', '-c:v', 'mjpeg', '-q:v', '4', '-f', 'image2pipe', 'pipe:1'];
+function captureArgs(device, mode, platform = process.platform) {
+  if (device.demo) {
+    return ['-hide_banner', '-loglevel', 'warning', '-re', '-f', 'lavfi', '-i', `testsrc2=size=${mode.size}:rate=${mode.fps}`, '-an', '-c:v', 'mjpeg', '-q:v', '4', '-f', 'image2pipe', 'pipe:1'];
+  }
+
+  let format = 'avfoundation';
+  if (platform === 'win32') format = 'dshow';
+  else if (platform === 'linux') format = 'v4l2';
+
+  const inputId = platform === 'win32' ? device.index : `${device.index}:none`;
+  const inputArgs = ['-f', format, '-framerate', String(mode.fps), ...(device.screen ? [] : ['-video_size', mode.size]), '-i', inputId];
+
+  return ['-hide_banner', '-loglevel', 'warning', ...inputArgs, '-an', '-c:v', 'mjpeg', '-q:v', '4', '-f', 'image2pipe', 'pipe:1'];
 }
 
 module.exports = { parseDevices, enumerate, JpegParser, captureArgs };
