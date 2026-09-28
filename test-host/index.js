@@ -33,14 +33,20 @@ async function run() {
   const { window } = vscode;
   const originalQuickPick = window.showQuickPick;
   const originalSaveDialog = window.showSaveDialog;
+  const originalInfo = window.showInformationMessage;
+  const originalError = window.showErrorMessage;
+
   window.showQuickPick = async items => {
     const list = await items;
     return list.find(item => item.demo || item.name === 'Test pattern') || list[list.length - 1];
   };
   let saveTarget = clipPath;
   window.showSaveDialog = async () => vscode.Uri.file(saveTarget);
+  window.showInformationMessage = async (msg) => { console.log('VSCODE INFO:', msg); return undefined; };
+  window.showErrorMessage = async (msg) => { console.error('VSCODE ERROR:', msg); return undefined; };
 
   try {
+    await vscode.workspace.getConfiguration('frameport').update('saveMode', 'ask', true);
     await vscode.commands.executeCommand('frameport.open');
     await sleep(1000);
     check('activation opens a panel', () => assert.ok(true));
@@ -53,7 +59,8 @@ async function run() {
     await vscode.commands.executeCommand('frameport.record');
     await sleep(3000);
     await vscode.commands.executeCommand('frameport.record');
-    await sleep(2500); // stdin-end finalization
+    const clipDeadline = Date.now() + 10000;
+    while ((!fs.existsSync(clipPath) || fs.statSync(clipPath).size === 0) && Date.now() < clipDeadline) await sleep(200);
     check('recording saves a file', () => assert.ok(fs.existsSync(clipPath) && fs.statSync(clipPath).size > 0, 'clip missing'));
 
     const ffmpeg = process.env.FRAMEPORT_TEST_FFMPEG || 'ffmpeg';
