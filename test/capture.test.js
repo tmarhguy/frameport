@@ -3,8 +3,17 @@ const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
 const { parseDevices, JpegParser, captureArgs } = require('../src/capture');
 
-test('enumeration distinguishes video, screen, and audio devices', () => {
-  assert.deepEqual(parseDevices('[avfoundation @ x] AVFoundation video devices:\n[avfoundation @ x] [0] USB Capture\n[avfoundation @ x] [1] Capture screen 0\n[avfoundation @ x] AVFoundation audio devices:\n[avfoundation @ x] [0] Microphone'), [{ index: '0', name: 'USB Capture' }]);
+test('enumeration distinguishes video, screen, and audio devices on macOS', () => {
+  assert.deepEqual(parseDevices('[avfoundation @ x] AVFoundation video devices:\n[avfoundation @ x] [0] USB Capture\n[avfoundation @ x] [1] Capture screen 0\n[avfoundation @ x] AVFoundation audio devices:\n[avfoundation @ x] [0] Microphone', false, 'darwin'), [{ index: '0', name: 'USB Capture' }]);
+});
+
+test('enumeration parses Windows dshow devices', () => {
+  const output = `[dshow @ 000001cc91644000] DirectShow video devices
+[in#0 @ 000001cc91644000] "HP HD Camera" (video)
+[in#0 @ 000001cc91644000] "Microphone" (audio)`;
+  assert.deepEqual(parseDevices(output, false, 'win32'), [
+    { index: 'video=HP HD Camera', name: 'HP HD Camera' }
+  ]);
 });
 
 test('JPEG frames survive every possible chunk boundary', () => {
@@ -28,13 +37,13 @@ test('oversized malformed frame is discarded and parser recovers', () => {
 });
 
 test('hardware capture disables audio and uses an explicit input', () => {
-  const args = captureArgs({ index: '2' }, { size: '1280x720', fps: 30 });
+  const args = captureArgs({ index: '2' }, { size: '1280x720', fps: 30 }, 'darwin');
   assert.equal(args[args.indexOf('-i') + 1], '2:none');
   assert.ok(args.includes('-an'));
 });
 
 test('real FFmpeg synthetic capture produces complete JPEG frames', { timeout: 10000 }, async () => {
-  const args = captureArgs({ demo: true }, { size: '320x240', fps: 10 });
+  const args = captureArgs({ demo: true }, { size: '320x240', fps: 10 }, 'darwin');
   args.splice(args.length - 1, 0, '-frames:v', '3');
   const frames = [];
   const parser = new JpegParser(f => frames.push(f));
@@ -50,9 +59,8 @@ test('real FFmpeg synthetic capture produces complete JPEG frames', { timeout: 1
   } finally { clearTimeout(timer); child.kill(); }
 });
 
-
 test('screen sources are explicitly included and keep native dimensions', () => {
-  const devices = parseDevices('[avfoundation] AVFoundation video devices:\n[avfoundation] [3] Capture screen 0', true);
+  const devices = parseDevices('[avfoundation] AVFoundation video devices:\n[avfoundation] [3] Capture screen 0', true, 'darwin');
   assert.equal(devices[0].screen, true);
-  assert.equal(captureArgs(devices[0], { size: '1280x720', fps: 30 }).includes('-video_size'), false);
+  assert.equal(captureArgs(devices[0], { size: '1280x720', fps: 30 }, 'darwin').includes('-video_size'), false);
 });
