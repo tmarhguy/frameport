@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4 — 2026-09-27
+
+- Added Windows (`win32`) device capture support via FFmpeg `dshow` format, properly discovering and recording from local video sources on Windows.
+- Expanded Extension Development Host integration test to automatically discover `Code.exe` on Windows and correctly wait for video encoding to finish, guaranteeing a flake-free test suite.
+- Re-architected `capture.test.js` to decouple the OS check from the test environment, enabling the full unit test suite to pass on any OS.
+
 ## 0.2.3 — 2026-09-18
 
 - Marketplace / Open VSX listing fix: README screenshots use stable `raw.githubusercontent.com` URLs so images render on both stores and in the Extensions details view.
