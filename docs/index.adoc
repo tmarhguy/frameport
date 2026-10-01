@@ -20,6 +20,18 @@
 // Project identity lives here. Theme files under theme/ contain no
 // hardcoded project names and work unchanged in other repositories.
 
+[.lead]
+This manual is the detailed technical reference for FramePort: HDMI and
+USB video capture inside VS Code. It describes architecture, interfaces,
+programming model, verification, implementation, and performance in one
+numbered, navigable document.
+
+.Live capture inside VS Code — click through to the full clip.
+image::frameport-demo.gif[FramePort live capture demo in VS Code,align="center"]
+
+The full recording is
+https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/frameport-demo.mp4[frameport-demo.mp4].
+
 [.hero-tagline]
 HDMI capture directly inside VS Code.
 
@@ -32,18 +44,6 @@ HDMI capture directly inside VS Code.
 
 [.hero-meta]
 0.2.4 · JavaScript · FFmpeg · VS Code API
-
-[.lead]
-This manual is the detailed technical reference for FramePort: HDMI and
-USB video capture inside VS Code. It describes architecture, interfaces,
-programming model, verification, implementation, and performance in one
-numbered, navigable document.
-
-.Live capture inside VS Code — click through to the full clip.
-image::frameport-demo.gif[FramePort live capture demo in VS Code,align="center"]
-
-The full recording is
-https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/frameport-demo.mp4[frameport-demo.mp4].
 
 The concise project overview stays in the repository
 link:../README.md[root README].

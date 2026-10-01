@@ -1,38 +1,16 @@
 /* Collapsible left navigation for the Asciidoctor single-page manual.
  * No dependencies. Progressively enhances the built-in #toc list:
  * without JS, all levels render open and every link still works.
+ *
+ * The sidebar always starts fully expanded on every page load.
+ * Collapse state is intentionally not persisted across visits.
  */
 (function () {
   'use strict';
 
-  var STORAGE_KEY = 'tech-manual-nav-v1';
   var COLLAPSED = 'nav-collapsed';
   var ACTIVE = 'toc-active';
-
-  // Read persisted collapsed hrefs; tolerate private-mode failures.
-  function loadState() {
-    try {
-      var raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      var parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function saveState(hrefs) {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(hrefs));
-    } catch (e) {
-      /* storage unavailable: navigation still works for this visit */
-    }
-  }
-
-  function sectionHref(li) {
-    var link = li.querySelector(':scope > a, :scope > .nav-row > a');
-    return link ? link.getAttribute('href') : null;
-  }
+  var LEGACY_STORAGE_KEY = 'tech-manual-nav-v1';
 
   function setCollapsed(li, collapsed, btn) {
     li.classList.toggle(COLLAPSED, collapsed);
@@ -43,19 +21,10 @@
     }
   }
 
-  function collectCollapsed(root) {
-    var out = [];
-    var items = root.querySelectorAll('li.' + COLLAPSED);
-    for (var i = 0; i < items.length; i++) {
-      var href = sectionHref(items[i]);
-      if (href) out.push(href);
-    }
-    return out;
-  }
-
   // Wrap each parent item's link in a row with a disclosure button.
   // The title link keeps navigating normally; only the arrow toggles.
-  function enhance(root, collapsedHrefs) {
+  // Every section starts expanded; toggling affects this visit only.
+  function enhance(root) {
     var items = root.querySelectorAll('li');
     for (var i = 0; i < items.length; i++) {
       (function (li) {
@@ -80,14 +49,11 @@
         btn.appendChild(arrow);
         row.insertBefore(btn, link);
 
-        var href = link.getAttribute('href');
-        var shouldCollapse = collapsedHrefs && href && collapsedHrefs.indexOf(href) !== -1;
-        setCollapsed(li, !!shouldCollapse, btn);
+        setCollapsed(li, false, btn);
 
         btn.addEventListener('click', function () {
           var nowCollapsed = !li.classList.contains(COLLAPSED);
           setCollapsed(li, nowCollapsed, btn);
-          saveState(collectCollapsed(root));
         });
       })(items[i]);
     }
@@ -107,7 +73,6 @@
           setCollapsed(parents[i], true, parents[i].querySelector(':scope > .nav-row > .nav-toggle'));
         }
       }
-      saveState(collectCollapsed(root));
     });
 
     var expand = document.createElement('button');
@@ -118,7 +83,6 @@
       for (var j = 0; j < open.length; j++) {
         setCollapsed(open[j], false, open[j].querySelector(':scope > .nav-row > .nav-toggle'));
       }
-      saveState([]);
     });
 
     bar.appendChild(collapse);
@@ -168,11 +132,18 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    // Drop collapsed state stored by older versions, so the sidebar
+    // always opens fully expanded on first load.
+    try {
+      window.localStorage.removeItem(LEGACY_STORAGE_KEY);
+    } catch (e) {
+      /* storage unavailable: navigation still works for this visit */
+    }
     var toc = document.getElementById('toc');
     if (!toc) return;
     var root = toc.querySelector('ul.sectlevel1, ul');
     if (!root) return;
-    enhance(root, loadState());
+    enhance(root);
     addControls(toc, root);
     markActive(root);
     watchSections(root);

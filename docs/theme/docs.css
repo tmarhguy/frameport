@@ -161,6 +161,7 @@
  * Generic: no project names, no hardcoded URLs. */
 #content .hero-tagline {
   font-size: 1.15em;
+  text-align: center;
   margin: 0.25rem 0 0;
 }
 
@@ -169,6 +170,7 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   align-items: center;
+  justify-content: center;
   margin: 1rem 0 0.5rem;
 }
 
@@ -200,5 +202,6 @@
 
 #content .hero-meta {
   color: #555;
+  text-align: center;
   margin: 0.5rem 0 0;
 }
