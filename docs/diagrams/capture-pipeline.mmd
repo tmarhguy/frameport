@@ -1,0 +1,7 @@
+flowchart TB
+    AV["AVFoundation<br/>macOS"] --> FF["FFmpeg<br/>JPEG frame output"]
+    DS["dshow<br/>Windows"] --> FF
+    SYN["Synthetic<br/>test pattern"] --> FF
+    FF --> PARSE["Bounded parser<br/>latest frame · skip, never queue"]
+    PARSE --> PREV["Preview branch<br/>loopback endpoint → webview canvas<br/>PNG screenshot · media/screenshots/"]
+    PARSE --> REC["Recording branch<br/>on-demand encoder<br/>fragmented H.264 MP4 · media/videos/"]

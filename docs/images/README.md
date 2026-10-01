@@ -24,6 +24,12 @@ Exception: `media/screenshots/` holds optimized duplicates of the four README he
 | `preview-light.png` | Fresh `npm run test:ui` capture of current markup | Light-theme harness shot; theme-verification reference, not hardware evidence |
 | `preview-high-contrast.png` | Fresh `npm run test:ui` capture of current markup | High-contrast harness shot; theme-verification reference, not hardware evidence |
 
+Manual figures live in `manual/` with sources in `docs/diagrams/`:
+
+| File | Origin | Use |
+| --- | --- | --- |
+| `manual/capture-pipeline.svg` | Hand-rendered from `docs/diagrams/capture-pipeline.mmd` (no local mermaid renderer; matches the checked-in tomato `.mmd` + `.svg` pair pattern) | Architecture chapter pipeline figure |
+
 The three user-provided screenshots show an earlier candidate. They are workflow illustrations, not current performance benchmarks. The source-picker image includes the user's device names as supplied. Do not infer phone-screen mirroring from the presence of an iPhone camera.
 
 Regenerate browser artifacts with `npm run test:ui`, inspect them, then copy only the images needed for documentation. Keep redundant test screenshots in ignored `artifacts/`.

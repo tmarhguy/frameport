@@ -12,18 +12,10 @@ endpoint binds to loopback with an unpredictable session path behind a
 restricted webview CSP. There is no background service and no network
 video upload.
 
-[source,text]
-----
-AVFoundation device / synthetic source
-              ↓
-       FFmpeg JPEG output
-              ↓
-     bounded parser / latest frame
-              ├── loopback endpoint → webview canvas → PNG screenshot
-              └── on-demand encoder → fragmented H.264 MP4
-----
+.Capture pipeline: sources converge on FFmpeg; the bounded parser fans out to preview and recording branches.
+image::manual/capture-pipeline.svg[FramePort capture pipeline,70%,align="center"]
 
-Figure provenance: `docs/DEVELOPMENT.md` (architecture diagram).
+Figure provenance: hand-rendered SVG from `docs/diagrams/capture-pipeline.mmd`.
 Device sources differ per OS (see <<limitations>>); the pipeline after
 FFmpeg is identical.
 
