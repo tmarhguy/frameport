@@ -157,15 +157,36 @@
   }
 }
 
-/* Hero call-to-action row at the top of the manual.
+/* Hero unit at the top of the manual: framed demo, caption, tagline,
+ * call-to-action buttons, and meta line in one centered block.
  * Generic: no project names, no hardcoded URLs. */
-#content .hero-tagline {
-  font-size: 1.15em;
+#content .hero {
   text-align: center;
-  margin: 0.25rem 0 0;
+  margin: 1.5rem auto;
+  max-width: 640px;
 }
 
-#content .cta-row {
+#content .hero img {
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  border: 1px solid var(--docs-border);
+  padding: 0.5rem;
+}
+
+#content .hero .hero-caption {
+  color: #555;
+  font-style: italic;
+  margin: 0.5rem 0 0;
+}
+
+#content .hero .hero-tagline {
+  font-size: 1.15em;
+  font-weight: 600;
+  margin: 0.75rem 0 0;
+}
+
+#content .hero .cta-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -174,8 +195,10 @@
   margin: 1rem 0 0.5rem;
 }
 
-#content .cta {
+#content .hero .cta {
   display: inline-block;
+  flex: 0 0 auto;
+  white-space: nowrap;
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none !important;
@@ -184,24 +207,23 @@
   border: 2px solid var(--docs-active-border);
 }
 
-#content .cta-primary {
+#content .hero .cta-primary {
   background: var(--docs-active-border);
   color: #fff !important;
 }
 
-#content .cta-secondary {
+#content .hero .cta-secondary {
   background: transparent;
   color: var(--docs-active-border) !important;
 }
 
-#content .cta:hover,
-#content .cta:focus-visible {
+#content .hero .cta:hover,
+#content .hero .cta:focus-visible {
   outline: 2px solid var(--docs-active-border);
   outline-offset: 2px;
 }
 
-#content .hero-meta {
+#content .hero .hero-meta {
   color: #555;
-  text-align: center;
   margin: 0.5rem 0 0;
 }

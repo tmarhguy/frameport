@@ -11,19 +11,19 @@
 </p>
 
 <p align="center">
-  <a href="https://open-vsx.org/extension/tmarhguy/frameport"><img alt="Install on Open VSX" src="https://img.shields.io/badge/Install_on_Open_VSX-tmarhguy.frameport-007ACC?style=for-the-badge"></a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=tmarhguy.frameport"><img alt="VS Code Marketplace" src="https://img.shields.io/badge/VS_Code_Marketplace-tmarhguy.frameport-2e7d32?style=for-the-badge"></a>
-</p>
-
-<p align="center">
   <a href="https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/frameport-demo.mp4"><img src="https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/frameport-demo.gif" alt="FramePort live capture demo in VS Code — click for the full clip" width="480" /></a>
   <br>
   <em>Demo: live capture inside VS Code — click the preview for the full clip.</em>
 </p>
 
+<p align="center">
+  <a href="https://open-vsx.org/extension/tmarhguy/frameport"><img alt="Install on Open VSX" src="https://img.shields.io/badge/Install_on_Open_VSX-tmarhguy.frameport-007ACC?style=for-the-badge"></a>
+  <a href="https://tmarhguy.github.io/frameport/"><img alt="Read the Technical Manual" src="https://img.shields.io/badge/Technical_Manual-tmarhguy.github.io-2e7d32?style=for-the-badge"></a>
+</p>
+
 FramePort opens an HDMI capture card or other USB video device in an editor tab. View FPGA HDMI output beside your code, inspect individual pixels, save a PNG screenshot, or record a silent MP4 clip without switching to a separate video application.
 
-**Explore:** [technical manual](docs/index.adoc) ·
+**Explore:** [technical manual](https://tmarhguy.github.io/frameport/) ·
 [development](docs/DEVELOPMENT.md) ·
 [build journal](docs/log)
 

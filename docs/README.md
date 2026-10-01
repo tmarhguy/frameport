@@ -2,7 +2,7 @@
 
 ![docs](https://img.shields.io/badge/docs-contributor_guides-007ACC?style=flat-square)
 
-- [Technical manual](index.adoc) — architecture, interfaces, verification, limitations. Build with `make docs` (`build/docs/index.html`).
+- [Technical manual](index.adoc) — architecture, interfaces, verification, limitations. Build with `make docs` (`build/docs/index.html`). Live at https://tmarhguy.github.io/frameport/.
 - [Development](DEVELOPMENT.md) — run, test, architecture, packaging.
 - [Publishing](PUBLISHING.md) — release checks and Marketplace steps.
 - [Design rules](DESIGN.md) — native-theme UI constraints.
