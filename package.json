@@ -26,7 +26,8 @@
     "test:ffmpeg-missing:docker": "docker build -f docker/ffmpeg-missing/Dockerfile -t frameport-ffmpeg-missing . && docker run --rm frameport-ffmpeg-missing",
     "package": "vsce package --no-dependencies --skip-license",
     "package:local": "vsce package --no-dependencies --skip-license --no-rewrite-relative-links",
-    "package:public": "vsce package --no-dependencies"
+    "package:public": "vsce package --no-dependencies",
+    "docs": "sh scripts/build-docs.sh"
   },
   "contributes": {
     "commands": [

@@ -1,0 +1,79 @@
+[[interfaces]]
+== Interfaces
+
+This chapter defines every boundary another user or system touches:
+commands, settings, capture modes, save destinations, and the FFmpeg
+tool boundary. Authority: `package.json`, `src/`.
+
+=== Conventions
+
+* Requested capture settings and observed preview output are labeled
+  separately everywhere. A requested mode is never a measured result.
+* Screenshot and recording destinations are local files only.
+
+=== Commands
+
+[width="100%",cols="40%,60%",options="header"]
+|===
+|Command |What it does
+|`FramePort: Open Capture Device` |Open the capture panel.
+|`FramePort: Select Device` |Pick a source and requested mode.
+|`FramePort: Take Screenshot` |Save the displayed frame as PNG.
+|`FramePort: Start / Stop Recording` |Record silent H.264 MP4; never overwrites.
+|`FramePort: Restart Stream` |Restart capture on the current source.
+|`FramePort: Stop Stream` |Release the device.
+|`FramePort: Show Diagnostics` |Inspect FFmpeg output on failure.
+|`FramePort: Show Last Capture` |Reveal the last PNG/MP4 in the file manager.
+|===
+
+=== Settings
+
+[width="100%",cols="28%,14%,58%",options="header"]
+|===
+|Setting |Default |Use
+|`frameport.ffmpegPath` |`ffmpeg` |Executable override (for example `/opt/homebrew/bin/ffmpeg`).
+|`frameport.previewFps` |`30` |Preview cap: `15`, `30`, or `60`. Source capture and recording are independent.
+|`frameport.recordingEncoder` |`software` |`libx264` (smaller files, everywhere) or macOS VideoToolbox `hardware` (larger files; actionable error when unavailable).
+|`frameport.saveRoot` |`media` |Capture root: workspace-relative, absolute as-is, else `~/FramePort`.
+|`frameport.screenshotFolder` |`screenshots` |PNG subfolder under the save root.
+|`frameport.videoFolder` |`videos` |MP4 subfolder under the save root.
+|`frameport.saveMode` |`auto` |`auto` writes immediately; `ask` shows the save dialog.
+|`frameport.filenameStyle` |`timestamp` |`timestamp` (`frameport-YYYYMMDD-HHMMSS`) or `sequential` (`frameport-0001`, …). Existing files are never overwritten.
+|===
+
+=== Capture modes
+
+Modes are _requested_ per device, not probed capabilities. Screen
+sources capture at native size with a separate FPS choice; the footer
+never reports an unapplied camera resolution.
+
+.Capture-mode picker — requested modes, not probed capabilities.
+image::capture-modes.png[Requested capture modes,60%,align="center"]
+
+.Source picker — a phone camera is not screen mirroring.
+image::source-picker.png[FramePort source picker,60%,align="center"]
+
+=== Save destinations
+
+Screenshots autosave as PNG under the screenshot folder; recordings as
+silent H.264 MP4 under the video folder. Closing the panel finalizes an
+active recording first. Deleted last-capture files report a clear
+message instead of failing silently.
+
+=== FFmpeg boundary
+
+FramePort requires FFmpeg with `libx264` on PATH. On macOS it also
+checks `/opt/homebrew/bin/ffmpeg` and `/usr/local/bin/ffmpeg`, or the
+`frameport.ffmpegPath` override. `ffprobe` next to the configured
+FFmpeg serves the integration tests (`FRAMEPORT_TEST_FFMPEG`,
+`FRAMEPORT_TEST_FFPROBE` overrides). If FFmpeg is missing, FramePort
+offers a Homebrew install on macOS, the download guide, or settings —
+never a dead end.
+
+=== Host sandbox
+
+The extension runs in the local UI extension host and is unsupported in
+remote, browser-only, and untrusted workspaces
+(`untrustedWorkspaces` and `virtualWorkspaces` are `false`). Camera and
+screen-recording permission is requested by macOS when needed.
+

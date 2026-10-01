@@ -1,0 +1,63 @@
+[[verification]]
+== Verification
+
+This chapter states what has been checked, with commands that reproduce
+each claim. Harness results are labeled harness; they never stand in
+for device permissions or Extension Host behavior.
+
+=== Strategy
+
+[width="100%",cols="32%,38%,30%",options="header"]
+|===
+|Layer |Method |Reproduce
+|Unit |Node test runner |`npm test`
+|Static gate |Checks |`npm run check`
+|Panel behavior |Browser harness, mocked VS Code messaging |`npm run test:ui`
+|Host behavior |Synthetic Extension Host suite |`npm run test:host`
+|Missing-FFmpeg recovery |Nonexistent path + mocked API |`npm run test:ffmpeg-missing`
+|Missing-FFmpeg in container |Node image without FFmpeg |`npm run test:ffmpeg-missing:docker`
+|Physical device |One app owns the device |Manual, see below
+|===
+
+NOTE: The table above is the verification contract.
+A passing harness run does not prove device permissions or host behavior.
+
+=== Focused checks
+
+[source,bash]
+----
+npm run check
+npm test
+npm run test:ui
+----
+
+Browser tests need Playwright Chromium
+(`npx playwright install chromium` if absent) and a local port. They
+generate screenshots under ignored `artifacts/`; they test the webview
+with mocked messaging, not device permissions or Extension Host
+behavior.
+
+`npm run test:host` opens a real VS Code window in a temporary profile
+and never installs the candidate into the normal profile. Set
+`VSCODE_TEST_BINARY` if the binary lives elsewhere.
+
+Missing-FFmpeg recovery is checked without uninstalling host FFmpeg:
+the suite uses a nonexistent path and a mocked VS Code API, plus the
+same checks in a Linux container with Node but no FFmpeg binary.
+
+=== Physical device vs harness
+
+* _Browser harness_ means `npm run test:ui` with mocked VS Code
+  messaging. Label its screenshots synthetic; the recording-state shots
+  are explicitly injected states.
+* _Synthetic host_ means `npm run test:host` in a temporary profile.
+  It exercises host wiring, not real user permissions.
+* _Physical device_ means a camera or capture card owned by exactly one
+  application, with device/mode, FFmpeg version, and contention status
+  recorded alongside the measurement.
+
+For every change, report which checks actually ran — unit, real FFmpeg,
+browser harness, Extension Host, and physical device — with device,
+mode, FFmpeg version, and contention status. Never infer hardware
+latency from preview FPS alone.
+

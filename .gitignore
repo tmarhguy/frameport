@@ -2,7 +2,8 @@ node_modules/
 *.vsix
 .DS_Store
 artifacts/
+build/
 .local/
 /docs/log/.obsidian
 media/videos/
-media/screenshots/frameport-*
+media/screenshots/frameport-[0-9]*

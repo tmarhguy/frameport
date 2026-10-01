@@ -1,0 +1,63 @@
+[[design]]
+== Design
+
+This chapter records how the blocks in <<architecture>> realize the
+pipeline. It is an implementation description, not a second contract.
+
+=== Capture and session
+
+`src/capture.js` enumerates sources and builds the FFmpeg capture
+arguments per OS (AVFoundation on macOS, `dshow` on Windows, synthetic
+test pattern elsewhere). It frames the JPEG output stream for the
+bounded parser, which keeps the latest frame and skips — never queues —
+under load.
+
+`src/session.js` serializes the capture lifecycle so restarts never
+touch the device concurrently. Stale callbacks and frames from a stopped
+or replaced capture are discarded.
+
+=== Recorder
+
+`src/recorder.js` reuses the current capture feed; it never reopens the
+device. The encoder input queue is bounded. Success requires all of:
+accepted input frames, confirmed encoded frames from FFmpeg progress on
+a separate pipe, a clean encoder exit, and nonempty output. A header-only
+file with accepted input still reports failure.
+
+=== Screenshot
+
+`src/screenshot.js` saves the displayed frame — including a paused
+frame — as PNG. Oversized captures fail visibly on client and host
+instead of disappearing. Reveal destinations are local-file only.
+
+=== Panel and preview
+
+`src/view.js` with `media/preview.js` and `media/preview.css` renders
+the theme-aware panel. Rules from `docs/DESIGN.md`:
+
+* Follow VS Code theme colors and typography, including light and
+  high-contrast themes. Only the live-video surface stays black.
+* No brand palette, gradients, glows, glass, hero sections, or slogans
+  in the capture panel. Short operational labels; errors state what
+  failed and what to try.
+* Show real measurements only. Requested settings and observed output
+  are labeled separately.
+
+Preview pacing uses deadline-based scheduling so a 30 fps cap delivers
+near 30 unique frames; per-frame layout work runs only when dimensions,
+scaling, or smoothing change. FPS sampling resets on pause and tab
+visibility changes.
+
+=== Error handling
+
+Errors are part of the design:
+
+* _Input errors_ — unwritable filename, oversized screenshot, missing
+  encoder in the FFmpeg build. Reported with the next action.
+* _Capture errors_ — device held by another app, dropped HDMI, bad
+  mode. Reported with permissions, cable, and lower-mode steps.
+* _Toolchain errors_ — FFmpeg missing or not on VS Code's PATH.
+  Reported with the Homebrew install, guide, or settings actions.
+
+Each class names its recovery in <<programming-model>>.
+

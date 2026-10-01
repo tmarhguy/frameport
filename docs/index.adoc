@@ -1,0 +1,82 @@
+= FramePort Technical Reference Manual
+:toc: left
+:toclevels: 3
+:toc-title: Contents
+:sectnums:
+:sectnumlevels: 3
+:icons: font
+:source-highlighter: rouge
+:rouge-style: github
+:docinfo: shared
+:docinfodir: theme
+:imagesdir: images
+:idprefix:
+:idseparator: -
+:experimental:
+:reproducible:
+:revnumber: 0.2.4
+:revdate: 2026-10-01
+
+// Project identity lives here. Theme files under theme/ contain no
+// hardcoded project names and work unchanged in other repositories.
+
+[.hero-tagline]
+HDMI capture directly inside VS Code.
+
+++++
+<p class="cta-row">
+  <a class="cta cta-primary" href="https://open-vsx.org/extension/tmarhguy/frameport">Install on Open VSX</a>
+  <a class="cta cta-secondary" href="https://github.com/tmarhguy/frameport">GitHub</a>
+</p>
+++++
+
+[.hero-meta]
+0.2.4 · JavaScript · FFmpeg · VS Code API
+
+[.lead]
+This manual is the detailed technical reference for FramePort: HDMI and
+USB video capture inside VS Code. It describes architecture, interfaces,
+programming model, verification, implementation, and performance in one
+numbered, navigable document.
+
+.Live capture inside VS Code — click through to the full clip.
+image::frameport-demo.gif[FramePort live capture demo in VS Code,align="center"]
+
+The full recording is
+https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/frameport-demo.mp4[frameport-demo.mp4].
+
+The concise project overview stays in the repository
+link:../README.md[root README].
+Executable sources under `src/` win over this prose when they disagree;
+`docs/DEVELOPMENT.md`, `docs/DESIGN.md`, `docs/PUBLISHING.md`, and
+`CHANGELOG.md` are the current facts. Dated entries under `docs/log/`
+are history and never authoritative for current status.
+
+[source,bash]
+----
+# Build this manual locally (requires Asciidoctor, no Node.js)
+make docs
+# Output: build/docs/index.html
+----
+
+TIP: The left table of contents is collapsible.
+Select an arrow (pass:[▸] / pass:[▾]) to expand or collapse a chapter;
+selecting the chapter title itself navigates normally.
+State persists in your browser via `localStorage`.
+With JavaScript disabled, the full table of contents remains usable.
+
+// Chapter assembly. Convention (required by the AsciiDoc include model):
+// every file under sections/ starts with a [[chapter-id]] anchor on its
+// first line and ends with a trailing blank line. Without both, a chapter
+// opening "==" can glue to the previous file's final paragraph or table
+// and silently drop out of the section hierarchy.
+include::sections/01-introduction.adoc[]
+include::sections/02-architecture.adoc[]
+include::sections/03-design.adoc[]
+include::sections/04-interfaces.adoc[]
+include::sections/05-programming-model.adoc[]
+include::sections/06-verification.adoc[]
+include::sections/07-implementation.adoc[]
+include::sections/08-performance.adoc[]
+include::sections/09-limitations.adoc[]
+

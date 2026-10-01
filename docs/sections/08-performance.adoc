@@ -1,0 +1,35 @@
+[[performance]]
+== Performance
+
+This chapter gives the rate, pacing, and size numbers with exact
+wording. Each number names its domain; domains are never merged.
+
+=== Rates
+
+[width="100%",cols="34%,33%,33%",options="header"]
+|===
+|Quantity |Value |Meaning
+|Preview cap |`15`, `30`, or `60` |`frameport.previewFps`; display work only
+|Source rate |Device requested mode |What was asked of the hardware
+|Observed FPS |Measured |Frames actually rendered; resets on pause and tab visibility changes
+|Recording confirmation |Encoder progress |Frames confirmed into the MP4 before Saved is reported
+|===
+
+Preview pacing uses deadline-based scheduling so a 30 fps cap delivers
+near 30 unique frames instead of ~27. One FFmpeg process runs while
+viewing, one more while recording. Under load, frames are skipped rather
+than queued, so observed FPS is output throughput, not latency.
+
+=== Size and fidelity
+
+* The transport is JPEG, so PNG screenshots are not lossless.
+* Oversized screenshots are refused with a visible error.
+* Software `libx264` recording makes smaller files and works
+  everywhere; macOS VideoToolbox hardware recording makes larger files.
+* Existing files are never overwritten under either filename style.
+
+IMPORTANT: Source rate, preview cap, observed FPS, and encoded frames
+are different metrics. State the domain with every number. Arrival-time
+timestamps are approximate and need validation against the intended
+source timeline. Never infer hardware latency from preview FPS alone.
+

@@ -1,0 +1,55 @@
+[[programming-model]]
+== Programming model
+
+This chapter shows how to drive FramePort. Every claim here is
+executable or directly checkable.
+
+=== Quick start
+
+. Install `0.2.4` from the VS Code Marketplace or Open VSX, or install
+  `frameport-0.2.4.vsix` via *Extensions: Install from VSIX…*.
+. Run *FramePort: Open Capture Device*, then *Select device* — or *Test
+  pattern* to verify without hardware.
+. Pick a capture mode the device supports. Allow camera access if macOS
+  asks.
+. Use Pause, Screenshot, Record, Focus, and Diagnostics from the panel
+  toolbar or the Command Palette.
+
+Screenshots and recordings autosave to `media/screenshots` and
+`media/videos` in the workspace (or `~/FramePort` with no folder open).
+`saveMode: ask` shows the save dialog, still defaulting into those
+folders.
+
+=== Settings recipes
+
+[source,bash]
+----
+// VS Code's PATH differs from the terminal's: pin FFmpeg explicitly.
+# Settings → frameport.ffmpegPath → /opt/homebrew/bin/ffmpeg
+----
+
+* Lower preview work without touching capture or recording:
+  set `frameport.previewFps` to `15`.
+* Smaller files everywhere: keep `frameport.recordingEncoder`
+  `software`. Lower recording CPU on macOS at the cost of larger
+  files: switch to `hardware` (VideoToolbox).
+* Per-project captures: set `frameport.saveRoot` to a
+  workspace-relative folder; with no folder open, `~/FramePort` is used.
+
+=== Troubleshooting sequences
+
+* _FFmpeg won't launch._ Use the Install-via-Homebrew / Install-guide
+  actions when offered, or set `frameport.ffmpegPath`; then
+  *Restart Stream*.
+* _No frames._ Check permissions, cables, other apps holding the
+  device, and try a lower mode; then *Show Diagnostics*.
+* _Recording fails._ Confirm the encoder exists in the FFmpeg build
+  and pick a new writable filename.
+* _Black frames._ Some cards emit black when HDMI drops; the video
+  alone cannot always tell. Check the source and cable first.
+
+To see the real missing-FFmpeg modal without uninstalling Homebrew
+FFmpeg: set `frameport.ffmpegPath` to `/nonexistent-frameport-ffmpeg`,
+run *FramePort: Open Capture Device* or *Test pattern*, then restore
+the setting afterward.
+

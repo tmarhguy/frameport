@@ -1,0 +1,204 @@
+/* Technical-manual overrides (generic theme, no project names).
+ * Asciidoctor's built-in HTML5 stylesheet remains the foundation;
+ * this file only adds sidebar, disclosure, active-state, spacing,
+ * scrolling, and responsive rules. No frameworks. */
+
+:root {
+  --docs-sidebar-width: 20rem;
+  --docs-border: #d7dae0;
+  --docs-active-bg: #eef3fa;
+  --docs-active-border: #1f4e79;
+  --docs-controls-fg: #444;
+}
+
+/* Independent scrolling: sidebar and document move separately. */
+#toc {
+  bottom: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+#toc .sectlevel1 {
+  padding-bottom: 2rem;
+}
+
+/* Collapse/expand controls (buttons are injected by nav.js). */
+#toc-controls {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--docs-border);
+  position: sticky;
+  top: 0;
+  background: inherit;
+  z-index: 1;
+}
+
+#toc-controls button {
+  font-size: 0.72rem;
+  color: var(--docs-controls-fg);
+  background: transparent;
+  border: 1px solid var(--docs-border);
+  border-radius: 3px;
+  padding: 0.15rem 0.5rem;
+  cursor: pointer;
+}
+
+#toc-controls button:hover,
+#toc-controls button:focus-visible {
+  border-color: var(--docs-active-border);
+  outline: 2px solid var(--docs-active-border);
+  outline-offset: 1px;
+}
+
+/* Disclosure rows: arrow button + normal navigation link. */
+#toc li {
+  position: relative;
+  list-style: none;
+}
+
+#toc li > .nav-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+#toc .nav-toggle {
+  flex: 0 0 1.4em;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: #555;
+  font-size: 0.8em;
+  line-height: 1.4;
+  padding: 0;
+}
+
+#toc .nav-toggle:hover,
+#toc .nav-toggle:focus-visible {
+  color: #000;
+  outline: 2px solid var(--docs-active-border);
+  outline-offset: 1px;
+}
+
+#toc .nav-toggle .nav-arrow {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+}
+
+/* Leaf entries have no toggle; keep text aligned. */
+#toc .nav-spacer {
+  flex: 0 0 1.4em;
+}
+
+/* Collapsed subtrees. Works with JS; without JS all levels stay open. */
+#toc li.nav-collapsed > ul {
+  display: none;
+}
+
+/* Subtle active-section indication. */
+#toc a.toc-active {
+  background: var(--docs-active-bg);
+  border-left: 3px solid var(--docs-active-border);
+  padding-left: calc(0.5em - 3px);
+  font-weight: 600;
+}
+
+/* Denser but readable engineering tables and code. */
+#content table.tableblock {
+  font-size: 0.92em;
+}
+
+#content .literalblock pre,
+#content .listingblock pre {
+  font-size: 0.85em;
+  line-height: 1.45;
+  border: 1px solid var(--docs-border);
+}
+
+#content .imageblock {
+  margin: 1.25em 0;
+}
+
+#content .imageblock img {
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  border: 1px solid var(--docs-border);
+  padding: 0.5rem;
+}
+
+/* Narrow screens: sidebar stacks above content, nothing clips. */
+@media screen and (max-width: 768px) {
+  #toc {
+    position: static !important;
+    width: auto !important;
+    max-height: 50vh;
+    border-bottom: 2px solid var(--docs-border);
+  }
+
+  #content {
+    margin-left: 0 !important;
+  }
+
+  #content table.tableblock,
+  #content .literalblock pre,
+  #content .listingblock pre {
+    overflow-x: auto;
+    display: block;
+  }
+}
+
+@media print {
+  #toc-controls,
+  #toc .nav-toggle {
+    display: none !important;
+  }
+}
+
+/* Hero call-to-action row at the top of the manual.
+ * Generic: no project names, no hardcoded URLs. */
+#content .hero-tagline {
+  font-size: 1.15em;
+  margin: 0.25rem 0 0;
+}
+
+#content .cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1rem 0 0.5rem;
+}
+
+#content .cta {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  padding: 0.55rem 1.25rem;
+  border-radius: 4px;
+  border: 2px solid var(--docs-active-border);
+}
+
+#content .cta-primary {
+  background: var(--docs-active-border);
+  color: #fff !important;
+}
+
+#content .cta-secondary {
+  background: transparent;
+  color: var(--docs-active-border) !important;
+}
+
+#content .cta:hover,
+#content .cta:focus-visible {
+  outline: 2px solid var(--docs-active-border);
+  outline-offset: 2px;
+}
+
+#content .hero-meta {
+  color: #555;
+  margin: 0.5rem 0 0;
+}

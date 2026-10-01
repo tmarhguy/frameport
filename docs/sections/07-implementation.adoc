@@ -1,0 +1,60 @@
+[[implementation]]
+== Implementation
+
+This chapter describes how the checked-in sources become the installable
+extension and what the build does and does not prove.
+
+=== Build flow
+
+[source,bash]
+----
+npm ci
+npm run check
+npm test
+npm run test:ui
+npm run package
+----
+
+`npm ci` installs development dependencies; no npm dependencies load in
+the installed extension. Press *F5* to open an Extension Development
+Host and hack directly. Guides: `docs/DEVELOPMENT.md`,
+`docs/PUBLISHING.md`.
+
+Programming the analogy loosely: building a VSIX does not publish a
+listing. Re-upload the exact reviewed artifact; Marketplace versions
+are immutable, so listing-only fixes ship as a patch bump.
+
+=== VSIX contents
+
+A good archive holds the manifest, README, CHANGELOG, `src/`, and
+runtime `media/` only. Excluded via `.vscodeignore`: tests, scripts,
+`docs/`, `artifacts/`, `test-host/`, `node_modules`, and the demo MP4
+(`media/screenshots/*.mp4` loads from the repository URL, not the
+package). The demo GIF stays packaged so the Extension Details page
+plays it offline while the repository is private.
+
+Inspect the actual archive, not only its filename:
+
+[source,bash]
+----
+unzip -l frameport-0.2.4.vsix
+shasum -a 256 frameport-0.2.4.vsix
+----
+
+Install it through *Extensions: Install from VSIX…* in a clean profile.
+
+=== Packaging variants
+
+* `npm run package` — standard flow. VSCE rewrites README image paths
+  to repository HTTPS URLs, so publish referenced image files first and
+  check them in the Marketplace preview.
+* `npm run package:local` — adds `--no-rewrite-relative-links` so the
+  Details page resolves packaged `media/screenshots/` images offline.
+  Private-preview exception, valid only while the repository is private.
+* `npm run package:public` — standard flow with the license bypass
+  removed. Use after distribution terms are selected.
+
+The manifest `preview` field is `false`: the listing is not marked
+preview. That flag is not the pre-release channel; choose the channel
+deliberately per the current VS Code publishing guide.
+

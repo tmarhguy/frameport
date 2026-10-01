@@ -1,0 +1,49 @@
+[[limitations]]
+== Known limitations
+
+This chapter lists explicit non-claims so readers do not infer more than
+the repository proves.
+
+=== Platform boundaries
+
+* Hardware capture is tested on macOS. Windows capture via FFmpeg
+  `dshow` is new in `0.2.4`; Linux shows a test pattern only.
+* Desktop VS Code `1.95+` in a trusted local workspace is required.
+  Remote, browser-only, and untrusted workspaces are unsupported.
+* macOS camera and screen-recording permission is requested when
+  needed; without it there are no frames.
+* Exactly one application may own a device. Contention looks like
+  missing or frozen frames; see <<programming-model>>.
+
+=== Capability boundaries
+
+* No audio, editing, broadcasting, or phone mirroring. A phone camera
+  source is a camera, not screen mirroring.
+* The transport is JPEG: screenshots are frames, not lossless captures.
+* Screen sources capture at native size; resolution presets do not
+  apply to them.
+* Black frames from a dropped HDMI signal are indistinguishable from
+  dark content in the video alone.
+
+=== Verification boundaries
+
+* Browser-harness screenshots are synthetic markup states, not hardware
+  evidence — including the explicitly labeled recording-state shots.
+* A passing unit, harness, or synthetic-host run does not prove device
+  permissions, real Extension Host behavior, or latency.
+* Recording success requires confirmed encoded frames, a clean encoder
+  exit, and nonempty output. Header-only output with accepted input
+  reports failure by design.
+
+=== Deployment boundaries
+
+* While the repository is private, README images resolve through
+  packaged `media/screenshots/` paths (`npm run package:local`).
+  At public release the README points back at `docs/images/` with the
+  standard `npm run package` flow.
+* The Marketplace listing updates only on VSIX re-upload; building
+  alone changes nothing public.
+* Dated entries under `docs/log/` preserve superseded behavior as
+  history. Do not use them to establish present status unless a current
+  chapter confirms it.
+

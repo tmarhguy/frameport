@@ -1,0 +1,72 @@
+[[introduction]]
+== Introduction
+
+This chapter states what FramePort is, what it is not, and how to read
+the rest of the manual.
+
+=== Purpose and scope
+
+FramePort is a VS Code extension that opens an HDMI capture card or
+other USB video device in an editor tab. It shows the feed beside your
+code, inspects individual pixels, saves a PNG screenshot, and records a
+silent MP4 clip without a separate video application.
+
+What FramePort is not:
+
+* No audio capture, editing, broadcasting, or phone screen mirroring.
+* No background service or network video upload; capture starts only on
+  an explicit action (see <<architecture>>).
+* Device capture is tested on macOS; Windows capture via FFmpeg `dshow`
+  is new in `0.2.4`; Linux shows a test pattern only.
+* Desktop VS Code `1.95+` in a trusted local workspace only. Remote,
+  browser-only, and untrusted workspaces are unsupported.
+
+Section <<architecture>> defines the data path.
+Section <<verification>> defines what has been checked and how to reproduce it.
+Section <<limitations>> states explicit non-claims.
+
+=== How to read this manual
+
+* Chapters, sections, and subsections are numbered (`sectnums`).
+* The left navigation mirrors the document hierarchy and collapses
+  per chapter; see the tip on the title page.
+* Cross-references such as <<interfaces>> navigate within this
+  single-page manual.
+* External links (for example https://code.visualstudio.com/api/ux-guidelines/webviews[VS Code webview UX],
+  the design reference for this project) open the referenced site.
+
+=== Conventions
+
+Inline code such as `frameport.previewFps`, `FramePort: Take Screenshot`,
+or `media/screenshots` denotes settings, commands, or paths.
+File paths such as `src/recorder.js` are repository-relative.
+
+Three rates are never merged:
+
+* _Requested mode_ — the resolution/frame rate asked of the device.
+* _Observed FPS_ — frames actually rendered in the preview.
+* _Encoded frames_ — frames the recorder confirmed into the MP4.
+
+=== Source map
+
+The editable authorities for this project are:
+
+[width="100%",cols="30%,70%",options="header"]
+|===
+|Question |Authority
+|Capture arguments and JPEG framing |`src/capture.js`
+|Capture lifecycle |`src/session.js`
+|Recording and finalization |`src/recorder.js`
+|Screenshot limits and validation |`src/screenshot.js`
+|Commands, dialogs, settings |`src/extension.js`
+|Panel markup, rendering, controls |`src/view.js`, `media/preview.js`, `media/preview.css`
+|Commands and settings contract |`package.json`
+|UI constraints |`docs/DESIGN.md`
+|Development and test workflow |`docs/DEVELOPMENT.md`
+|Release workflow |`docs/PUBLISHING.md`, `CHANGELOG.md`
+|Historical rationale |`docs/log/`
+|===
+
+Generated captures under `media/screenshots/` and `media/videos/` are
+derivatives, not editable authorities.
+

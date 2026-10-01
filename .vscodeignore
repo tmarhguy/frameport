@@ -6,6 +6,7 @@ test/**
 scripts/**
 docs/**
 artifacts/**
+media/screenshots/*.mp4
 test-host/**
 package-lock.json
 .gitignore

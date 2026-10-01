@@ -1,0 +1,58 @@
+[[architecture]]
+== Architecture
+
+This chapter describes the running system: where capture happens, where
+frames flow, and which blocks own what. Authority: `src/`.
+
+=== Overview
+
+FramePort runs in the local UI extension host. It starts no capture
+until an explicit action (open, select device, test pattern). The frame
+endpoint binds to loopback with an unpredictable session path behind a
+restricted webview CSP. There is no background service and no network
+video upload.
+
+[source,text]
+----
+AVFoundation device / synthetic source
+              ↓
+       FFmpeg JPEG output
+              ↓
+     bounded parser / latest frame
+              ├── loopback endpoint → webview canvas → PNG screenshot
+              └── on-demand encoder → fragmented H.264 MP4
+----
+
+Figure provenance: `docs/DEVELOPMENT.md` (architecture diagram).
+Device sources differ per OS (see <<limitations>>); the pipeline after
+FFmpeg is identical.
+
+=== Block inventory
+
+[width="100%",cols="30%,40%,30%",options="header"]
+|===
+|Block |Responsibility |Owns (state / artifacts)
+|`src/capture.js` |Source enumeration, FFmpeg capture arguments, JPEG framing |Device list, requested modes, frame parser
+|`src/session.js` |Serialized capture lifecycle, stale-callback cancellation |One live capture at a time
+|`src/recorder.js` |Bounded encoder input, progress parsing, output confirmation, finalization |MP4 output, encoded-frame count
+|`src/screenshot.js` |Screenshot limits, validation, saved-file action selection |PNG output, size refusal
+|`src/extension.js` |Commands, dialogs, settings, local server, coordination |Panel lifecycle, save destinations
+|`src/view.js`, `media/preview.*` |Theme-aware markup, rendering, controls, accessibility |Displayed frame, toolbar state
+|===
+
+TIP: If a behavior is not in <<interfaces>>, it is not a contract.
+Change it freely; changing an interface table is a breaking change.
+
+=== Data flow
+
+Frames leave the bounded parser on two independent branches:
+
+* The _preview branch_ serves the latest frame to the webview canvas.
+  Pause freezes this branch only; capture and recording continue.
+* The _recording branch_ feeds the current capture into an on-demand
+  encoder. Encoder progress must confirm frames before Saved is
+  reported; arrival-time timestamps are approximate.
+
+Normal teardown finalizes recording before replacing the source.
+Interrupted files are retained, never silently deleted. See <<design>>.
+

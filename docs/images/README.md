@@ -7,7 +7,12 @@ These images are for the repository, journal and Marketplace README. They are ex
 
 `media/` and `docs/images/` cannot merge: `media/icon.png`, `media/preview.js` and `media/preview.css` ship inside the VSIX and load at runtime paths, while everything here is repo documentation. Merging would either bloat installs by ~1.4 MB or break the webview.
 
-Exception: `media/screenshots/` holds optimized duplicates of the four README hero images. The repo is currently private, so the GitHub raw URLs that `vsce` rewrites `docs/images/` paths into return 404 inside VS Code's Extension Details page. Shipping the screenshots in `media/` with `--no-rewrite-relative-links` (see `package:local`) keeps Details working offline until the repo goes public. At public release, point the README back at `docs/images/` and use the standard `npm run package` flow.
+Exception: `media/screenshots/` holds optimized duplicates of the four README hero images, plus the live-capture demo (`frameport-demo.gif` ships in the VSIX so the Extension Details page plays it offline; `frameport-demo.mp4` is excluded from the VSIX via `.vscodeignore` and loads from the repository URL). The repo is currently private, so the GitHub raw URLs that `vsce` rewrites `docs/images/` paths into return 404 inside VS Code's Extension Details page. Shipping the screenshots in `media/` with `--no-rewrite-relative-links` (see `package:local`) keeps Details working offline until the repo goes public. At public release, point the README back at `docs/images/` and use the standard `npm run package` flow.
+
+| File | Origin | Use |
+| --- | --- | --- |
+| `frameport-demo.gif` | User-provided screen recording, converted to GIF | README hero / live-capture demo; click through to `frameport-demo.mp4` |
+| `frameport-demo.mp4` | User-provided screen recording (full clip) | README hero link target; excluded from VSIX |
 
 | File | Origin | Use |
 | --- | --- | --- |
