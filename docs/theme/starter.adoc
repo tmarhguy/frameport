@@ -1,0 +1,80 @@
+= Project documentation
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnums:
+:sectlinks:
+:icons!:
+:stylesheet!:
+:webfonts!:
+:docinfo: shared
+:experimental:
+:imagesdir: images
+
+[#overview]
+[preface]
+== Project documentation
+
+Describe what the project does and what this manual covers.
+
+// Hero visual appears here automatically when a conventional file exists,
+// e.g. docs/images/overview-hero.svg, hero.png, or demo.gif.
+// Set hero in docs/site.json to override the image, alt text, and caption,
+// or leave hero null with no image file for text-only documentation.
+++++
+<!-- docs-hero -->
+++++
+
+=== Quick start
+
+State the prerequisites, then provide a minimal working example.
+
+[source,sh]
+----
+echo "Replace with the project's setup command"
+----
+
+=== Contents
+
+* <<usage,Usage>> — commands and configuration.
+* <<architecture,Architecture>> — components and design decisions.
+
+[#usage]
+== Usage
+
+=== Commands
+
+Document supported commands, arguments, defaults, and examples.
+
+=== Configuration
+
+[cols="1,1,2",options="header"]
+|===
+| Option | Default | Description
+| `example` | `true` | Replace with a real setting.
+|===
+
+[#architecture]
+== Architecture
+
+=== Components
+
+Describe the components and how data moves between them.
+
+=== Decisions
+
+Link to the records behind important design choices.
+
+=== Callout examples
+
+NOTE: Use notes for additional context.
+
+TIP: Use tips for a useful shortcut or recommended practice.
+
+WARNING: Explain the risk and the action needed to avoid it.
+
+CAUTION: Describe an operation that requires care.
+
+IMPORTANT: State a requirement that must not be missed.
+
+include::theme/about.adoc[]

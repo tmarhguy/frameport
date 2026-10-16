@@ -1,19 +1,24 @@
-#!/bin/sh
-# Build the AsciiDoc technical manual into build/docs/.
-# Fails clearly if Asciidoctor is missing; never installs anything.
-set -eu
+#!/usr/bin/env bash
+# Build the static technical manual with Asciidoctor.
+# No dependency installation happens here; install Asciidoctor first:
+#   macOS:  brew install asciidoctor
+#   Linux:  sudo apt-get install -y asciidoctor   (or: gem install asciidoctor)
+#   Other:  gem install asciidoctor
+set -euo pipefail
 
-ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
-SRC="$ROOT/docs/index.adoc"
-OUT="$ROOT/build/docs"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+SRC="$REPO_ROOT/docs/index.adoc"
+OUT_DIR="$REPO_ROOT/build/docs"
+OUT_FILE="$OUT_DIR/index.html"
+
+cd "$REPO_ROOT"
 
 if ! command -v asciidoctor >/dev/null 2>&1; then
-  echo "error: asciidoctor is not installed." >&2
-  echo "" >&2
-  echo "Install the minimum dependency:" >&2
+  echo "error: asciidoctor not found on PATH." >&2
+  echo "Install it first:" >&2
   echo "  macOS:  brew install asciidoctor" >&2
-  echo "  Ubuntu: sudo apt-get install -y asciidoctor ruby-rouge" >&2
-  echo "  Other:  gem install asciidoctor rouge" >&2
+  echo "  Debian/Ubuntu: sudo apt-get install -y asciidoctor" >&2
+  echo "  RubyGems (any OS with Ruby): gem install asciidoctor" >&2
   exit 1
 fi
 
@@ -22,30 +27,70 @@ if [ ! -f "$SRC" ]; then
   exit 1
 fi
 
-mkdir -p "$OUT/theme" "$OUT/images"
+rm -rf "$OUT_DIR"
+mkdir -p "$OUT_DIR/theme" "$OUT_DIR/images"
 
-# Same build used locally and in CI. Attributes duplicate index.adoc
-# defaults so the command line stays explicit about the contract.
-asciidoctor \
-  -a toc=left \
-  -a toclevels=3 \
-  -a sectnums \
-  -a icons=font \
-  -a source-highlighter=rouge \
-  -a docinfo=shared \
-  -a docinfodir="$ROOT/docs/theme" \
-  -D "$OUT" \
-  "$SRC"
+python3 "$REPO_ROOT/scripts/ingest-logs.py"
+if [ -d "$REPO_ROOT/docs/diagrams" ]; then
+  python3 "$REPO_ROOT/scripts/render-docs-diagrams.py"
+fi
+if [ -d "$REPO_ROOT/docs/charts" ]; then
+  python3 "$REPO_ROOT/scripts/render-docs-charts.py"
+fi
+python3 "$REPO_ROOT/scripts/prepare-docs.py" head
 
-# Theme assets and figures travel with the generated HTML.
-cp "$ROOT/docs/theme/docs.css" "$ROOT/docs/theme/nav.js" "$OUT/theme/"
-cp -R "$ROOT/docs/images/." "$OUT/images/"
-# docs/images/README.md documents the folder; it is not a figure.
-rm -f "$OUT/images/README.md"
-# The live-capture demo is the manual's hero figure. Its canonical copy
-# lives in media/screenshots/ (it ships in the VSIX so the Extension
-# Details page plays it offline); stage it into the built manual so
-# image::frameport-demo.gif[] resolves in a self-contained build/.
-cp "$ROOT/media/screenshots/frameport-demo.gif" "$OUT/images/"
+REVDATE="$(git -C "$REPO_ROOT" log -1 --format=%cs 2>/dev/null || date +%F)"
+REVNUM="$(git -C "$REPO_ROOT" rev-parse --short HEAD 2>/dev/null || echo unversioned)"
 
-echo "docs: built $OUT/index.html"
+DOCINFO_DIR="$(mktemp -d "$REPO_ROOT/docs/theme/.docinfo.XXXXXX")"
+trap 'rm -rf "$DOCINFO_DIR"' EXIT
+cp "$OUT_DIR/theme/docinfo.html" "$DOCINFO_DIR/docinfo.html"
+
+HAS_LOGS=0
+if [ -f "$REPO_ROOT/docs/sections/generated/engineering-log.adoc" ]; then
+  HAS_LOGS=1
+fi
+
+if [ "$HAS_LOGS" -eq 1 ]; then
+  asciidoctor \
+    --failure-level WARN \
+    --backend html5 \
+    --safe-mode safe \
+    --attribute docinfo=shared \
+    --attribute docinfodir="$DOCINFO_DIR" \
+    --attribute revdate="$REVDATE" \
+    --attribute revnumber="$REVNUM" \
+    --attribute has-logs \
+    --out-file "$OUT_FILE" \
+    "$SRC"
+else
+  asciidoctor \
+    --failure-level WARN \
+    --backend html5 \
+    --safe-mode safe \
+    --attribute docinfo=shared \
+    --attribute docinfodir="$DOCINFO_DIR" \
+    --attribute revdate="$REVDATE" \
+    --attribute revnumber="$REVNUM" \
+    --out-file "$OUT_FILE" \
+    "$SRC"
+fi
+
+for asset in docs.css nav.js search.js; do
+  cp "$REPO_ROOT/docs/theme/$asset" "$OUT_DIR/theme/$asset"
+done
+
+if [ -d "$REPO_ROOT/docs/images" ]; then
+  cp -R "$REPO_ROOT/docs/images/." "$OUT_DIR/images/"
+fi
+if [ -d "$REPO_ROOT/docs/assets" ]; then
+  cp "$REPO_ROOT/docs/assets/"*.* "$OUT_DIR/images/" 2>/dev/null || true
+fi
+
+python3 "$REPO_ROOT/scripts/prepare-docs.py" page
+if [ -f "$REPO_ROOT/docs/404.html" ]; then
+  python3 "$REPO_ROOT/scripts/prepare-docs.py" not-found
+fi
+python3 "$REPO_ROOT/scripts/export-docs-template.py"
+
+echo "Built $OUT_FILE"

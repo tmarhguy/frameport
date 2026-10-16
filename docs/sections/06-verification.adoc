@@ -61,3 +61,23 @@ browser harness, Extension Host, and physical device — with device,
 mode, FFmpeg version, and contention status. Never infer hardware
 latency from preview FPS alone.
 
+=== Captures in the tree
+
+These stills are the manual's preview set. The animated demo GIF is not
+checked in; the full clip is the MP4 linked from the overview.
+
+.Idle preview
+image::preview-idle.png[FramePort preview idle,align=center]
+
+.Light theme while a source is selected
+image::preview-light.png[FramePort preview in the light theme,align=center]
+
+.High contrast
+image::preview-high-contrast.png[FramePort preview in high contrast,align=center]
+
+.Focus while recording
+image::focus-recording.png[FramePort recording with focus indication,align=center]
+
+.Tomato output captured through FramePort
+image::tomato-live.png[Tomato video captured live in FramePort,align=center]
+

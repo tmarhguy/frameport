@@ -5,30 +5,33 @@ on:
     branches: ["**"]
     paths:
       - "docs/**"
-      - "media/screenshots/frameport-demo.gif"
+      - "scripts/*docs*.py"
       - "scripts/build-docs.sh"
+      - "media/demo/**"
       - "Makefile"
       - ".github/workflows/docs.yml"
   pull_request:
     paths:
       - "docs/**"
-      - "media/screenshots/frameport-demo.gif"
+      - "scripts/*docs*.py"
       - "scripts/build-docs.sh"
+      - "media/demo/**"
       - "Makefile"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
+  group: "docs-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
   build:
+    permissions:
+      contents: read
+      pages: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,17 +39,29 @@ jobs:
       - name: Install Asciidoctor
         run: |
           sudo apt-get update
-          sudo apt-get install -y asciidoctor ruby-rouge
-      - name: Build docs
-        run: make docs
+          sudo apt-get install -y asciidoctor
+      - name: Configure Pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Build and validate docs
+        env:
+          DOCS_SITE_URL: ${{ steps.pages.outputs.base_url }}
+        run: make docs-check
+      - name: Check JavaScript syntax
+        run: |
+          for script in docs/theme/*.js; do node --check "$script"; done
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: build/docs
 
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    permissions:
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     environment:
       name: github-pages

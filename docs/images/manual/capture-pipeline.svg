@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 486" role="img" aria-label="FramePort capture pipeline: sources converge on FFmpeg; the bounded parser fans out to preview and recording branches">
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 1 L 9 5 L 0 9 z" fill="#333"/>
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#0e7490"/>
     </marker>
   </defs>
   <style>
     text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-    .box { fill: #ffffff; stroke: #333333; stroke-width: 1.5; }
-    .session { fill: none; stroke: #888888; stroke-width: 1.5; stroke-dasharray: 6 4; }
-    .title { font-size: 13px; font-weight: bold; fill: #111111; }
-    .line { font-size: 12px; fill: #333333; }
-    .sub { font-size: 11px; fill: #555555; }
-    .mono { font-size: 11px; font-family: Menlo, Consolas, monospace; fill: #555555; }
-    .edge { stroke: #333333; stroke-width: 1.5; }
+    .box { fill: #fffdfb; stroke: #e7e5e4; stroke-width: 1.5; }
+    .session { fill: none; stroke: #0e7490; stroke-width: 1.5; stroke-dasharray: 6 4; }
+    .title { font-size: 13px; font-weight: bold; fill: #1c1917; }
+    .line { font-size: 12px; fill: #1c1917; }
+    .sub { font-size: 11px; fill: #57534e; }
+    .mono { font-size: 11px; font-family: Menlo, Consolas, monospace; fill: #0e7490; }
+    .edge { stroke: #0e7490; stroke-width: 1.5; }
   </style>
 
   <!-- Sources -->

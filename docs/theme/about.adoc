@@ -1,0 +1,40 @@
+[#about]
+[preface]
+== About me
+
+I'm Tyrone Marhguy, a Computer Engineering student at the https://www.upenn.edu[University of Pennsylvania], class of 2028. FramePort is the VS Code extension I wrote for HDMI and USB capture, published on https://open-vsx.org/extension/tmarhguy/frameport[Open VSX].
+
+I grew up between Kumasi and Accra. In 2021, Achimota School denied me admission because I wear dreadlocks as an expression of my Rastafarian faith. Ghana's High Court ordered the school to admit me; I finished secondary school there, then came to Penn on a full scholarship. https://www.bbc.com/pidgin/world-57306291[BBC Pidgin] and https://www.dw.com/en/ghana-rastafarians-start-school-after-court-victory/video-57864466[Deutsche Welle] covered the case.
+
+I design the architecture, build the boards, and write the software. https://tomato.tmarhguy.com[Tomato] is a 32-bit computer with a running FPGA implementation and discrete boards in progress. I also build systems software, including a search engine, a compiler, and a database, and I contribute fixes to open-source EDA tools such as LibreLane, OpenROAD, Verilator, and OpenFPGA. That work has included production software at Aragorn AI and battery-management hardware at Vero Electric.
+
+=== Hardware
+
+* https://tomato.tmarhguy.com[Tomato], a 32-bit computer (https://github.com/tmarhguy/tomato[repository])
+* https://github.com/tmarhguy/gpu[Pineapple GPU], a programmable 3D GPU on a Nexys A7
+* https://github.com/tmarhguy/riscv[riscv64xO3], a 2-wide out-of-order RV64IMAC
+* https://github.com/tmarhguy/mac[MAC], a BFloat16 multiply-accumulate for SkyWater 130 nm
+* https://github.com/tmarhguy/udp-stack[UDP/IP stack], a 100 Mbps datapath on a Nexys A7
+* https://github.com/tmarhguy/itch-hw[ITCH parser], NASDAQ ITCH 5.0 on a Nexys A7
+* https://github.com/tmarhguy/mac-unit[6T SRAM], a full-custom SRAM study
+* https://alu.tmarhguy.com[8-bit discrete ALU]
+
+=== Software and systems
+
+* https://github.com/tmarhguy/figDB[FigDB], a transactional database
+* https://github.com/tmarhguy/sealion-search-engine[SeaLion], a full-text search engine
+* https://github.com/tmarhguy/lobster[Lobster], a systems language and compiler
+* https://github.com/tmarhguy/frameport[FramePort], HDMI capture in VS Code (https://open-vsx.org/extension/tmarhguy/frameport[Open VSX])
+* https://envelop.tmarhguy.com[Envelop], a browser link to Tomato (https://github.com/tmarhguy/envelop[repository])
+* https://github.com/tmarhguy/tools[Mango], offline command-line tools
+
+=== Open source
+
+See https://tmarhguy.com/projects/#open-source-title[open-source work] for contributions to LibreLane, OpenROAD, Verilator, and OpenFPGA.
+
+=== More
+
+* https://tmarhguy.com[Website], including https://tmarhguy.com/projects/[projects], https://tmarhguy.com/resume/[resume], https://tmarhguy.com/writing/[engineering log], and https://tmarhguy.com/press/[press]
+* https://en.wikipedia.org/wiki/Tyrone_Marhguy[Wikipedia]
+* https://github.com/tmarhguy[GitHub]
+* https://www.linkedin.com/in/tmarhguy/[LinkedIn]

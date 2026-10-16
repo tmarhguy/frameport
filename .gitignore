@@ -7,3 +7,5 @@ build/
 /docs/log/.obsidian
 media/videos/
 media/screenshots/frameport-[0-9]*
+/build/
+__pycache__/

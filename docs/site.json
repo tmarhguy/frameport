@@ -1,0 +1,24 @@
+{
+  "name": "FramePort",
+  "label": "Documentation",
+  "title": "Live video inside VS Code",
+  "description": "A VS Code extension that shows a live HDMI or USB video feed in an editor tab.",
+  "url": "",
+  "image": "",
+  "about": "#about",
+  "repository": "https://github.com/tmarhguy/frameport",
+  "website": "",
+  "source": "https://github.com/tmarhguy/frameport/blob/main/docs/index.adoc",
+  "groups": {
+    "0": "Documentation",
+    "11": "Author"
+  },
+  "branch": "main",
+  "hero": null,
+  "accent": "#0e7490",
+  "accentDark": "#67e8f9",
+  "nested": [
+    "engineering-log"
+  ],
+  "logs": "docs/log"
+}

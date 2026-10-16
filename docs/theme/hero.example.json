@@ -1,0 +1,22 @@
+{
+  "layout": "banner",
+  "title": "System overview",
+  "subtitle": "Input passes through processing to produce output.",
+  "rows": [
+    [
+      "Input",
+      "Describe the input to your project",
+      "request or source data"
+    ],
+    [
+      "Processing",
+      "Describe the main transformation",
+      "validation and processing"
+    ],
+    [
+      "Output",
+      "Describe the result",
+      "response or artifact"
+    ]
+  ]
+}

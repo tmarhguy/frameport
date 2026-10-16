@@ -40,7 +40,7 @@ FramePort opens an HDMI capture card or other USB video device in an editor tab.
 
 <table align="center">
   <tr>
-    <td align="center" width="50%"><img src="https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/source-picker.png" alt="FramePort source picker" /><br /><em>Pick a source; a phone camera is not screen mirroring.</em></td>
+    <td align="center" width="50%"><img src="https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/source-picker.png" alt="FramePort source picker, including the iPhone camera" /><br /><em>The iPhone camera on the Mac: the preview is you. Desk View is the overhead camera.</em></td>
     <td align="center" width="50%"><img src="https://raw.githubusercontent.com/tmarhguy/frameport/main/media/screenshots/capture-modes.png" alt="Requested capture modes" /><br /><em>Requested modes, not probed capabilities.</em></td>
   </tr>
 </table>
@@ -120,7 +120,7 @@ FFmpeg is auto-found in Homebrew paths or PATH; override with `frameport.ffmpegP
 
 ## Known issues and troubleshooting
 
-One FFmpeg process while viewing, one more while recording; frames are skipped rather than queued under load, so preview FPS is observed output, not latency. No audio, editing, broadcasting, or phone mirroring; browser-only VS Code is unsupported. The transport is JPEG, so PNG screenshots are not lossless.
+One FFmpeg process while viewing, one more while recording; frames are skipped rather than queued under load, so preview FPS is observed output, not latency. No audio, editing, or broadcasting. The iPhone camera and Desk View are the phone's cameras on the Mac, not a copy of the phone's screen. Browser-only VS Code is unsupported. The transport is JPEG, so PNG screenshots are not lossless.
 
 - **FFmpeg won't launch:** use the Install via Homebrew / Install guide actions when offered, or set `frameport.ffmpegPath`; VS Code's PATH differs from the terminal's.
 - **No frames:** check permissions, cables, other apps holding the device, and a lower mode; see **Diagnostics**.

@@ -17,8 +17,9 @@ the repository proves.
 
 === Capability boundaries
 
-* No audio, editing, broadcasting, or phone mirroring. A phone camera
-  source is a camera, not screen mirroring.
+* No audio, editing, or broadcasting. The iPhone camera and Desk View
+  are the phone's cameras on the Mac. They are not a copy of the
+  iPhone's screen.
 * The transport is JPEG: screenshots are frames, not lossless captures.
 * Screen sources capture at native size; resolution presets do not
   apply to them.

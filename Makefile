@@ -1,13 +1,25 @@
-# FramePort documentation targets. npm remains the build system for the
-# extension; this Makefile only drives the static manual under docs/.
-.PHONY: docs docs-clean docs-open
+.PHONY: docs docs-clean docs-open docs-check docs-diagrams
 
+# Build the complete static documentation into build/docs/.
 docs:
-	sh scripts/build-docs.sh
+	bash scripts/build-docs.sh
 
+# Remove generated documentation.
 docs-clean:
 	rm -rf build/docs
 
-# Portable opener: builds, then opens the entry page in the default browser.
+# Serve the built manual locally (requires `make docs` first).
+# Uses only the Python standard library; no npm or extra tooling.
 docs-open: docs
-	python3 -c "import webbrowser; webbrowser.open('build/docs/index.html')"
+	python3 -m http.server --directory build/docs 8000
+
+# Regenerate lightweight SVG diagrams after editing docs/diagrams/*.json.
+docs-diagrams:
+	python3 scripts/render-docs-diagrams.py
+
+# The same static validation used in CI; no third-party Python packages.
+docs-check: docs
+	python3 scripts/render-docs-diagrams.py --check
+	python3 scripts/check-docs.py
+	python3 scripts/test-docs-template.py
+

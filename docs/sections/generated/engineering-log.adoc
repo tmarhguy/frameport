@@ -1,0 +1,48 @@
+[#engineering-log]
+== Engineering log
+
+Each note below is the original project log, in chronological order.
+Open the arrow in the sidebar to jump to an entry.
+
+[#log-2026-09-13-other-device-stream]
+=== 2026-09-13 — Other video sources
+
+++++
+<div class="log-entry">
+<p>FramePort does not need to be limited to HDMI capture cards. The source picker can also show cameras and screen sources exposed by macOS.</p>
+<img src="images/logs/log-2026-09-13-other-device-stream-source-picker.png" alt="Available sources in FramePort" width="70%">
+<p><em>USB video, the FaceTime camera, the iPhone camera, Desk View, a screen source, and the test pattern. The list is whatever macOS exposes.</em></p>
+<p>The iPhone camera is the phone's camera on the Mac, so the preview is you. Desk View is the overhead camera from the same phone. Both appear because macOS presents them as video devices, the same way it presents a capture card.</p>
+<p>Seeing the iPhone's own screen, the way a simulator does, is a different source. Those two camera entries are not that. Sending a picture back to the phone would need a receiving application, and that path is not this one. Sources come into FramePort.</p>
+</div>
+++++
+
+[#log-2026-09-13-screenshots-and-recording]
+=== 2026-09-13 — Screenshots and recording
+
+++++
+<div class="log-entry">
+<p>The features I care about most, after the live view, are screenshots and recordings of the FPGA output.</p>
+<p>I want as little friction as possible between noticing something and saving it. A screenshot is useful for a display bug or a new screen layout. A short recording captures behavior that a still image cannot: a menu transition, a game, or a problem that appears only briefly.</p>
+<p>FramePort now saves the displayed frame as PNG and records the active source as a silent MP4. Pausing the preview lets me inspect a frame; it does not pause recording. That distinction matters when I want to study one image without losing what happens next.</p>
+<img src="images/logs/log-2026-09-13-screenshots-and-recording-preview-light.png" alt="Recording indicator in FramePort focus mode" width="70%">
+<p><em>Focus mode with the recording badge, captured from the synthetic test-pattern harness with an injected recording state — not a hardware recording.</em></p>
+<p>The next concern is responsiveness. Saving a clip should not make the live view unpleasant to use. The recorder shares the existing capture feed and skips frames under load rather than building an ever-growing queue. I still want to judge that behavior on the real hardware, not just by whether a test passes.</p>
+<p>The aim is to keep the related steps together: view, inspect, save, and find the saved file. More features can follow when there is a clear need for them.</p>
+</div>
+++++
+
+[#log-2026-09-13-welcome-frameport]
+=== 2026-09-13 — Welcome, FramePort!
+
+++++
+<div class="log-entry">
+<p>I built FramePort because I wanted to see my FPGA's HDMI output while working on its code.</p>
+<p>At first, that meant keeping an external monitor nearby. A USB capture card was a more convenient option, but I still had to open another application just to view the feed. I couldn't find a VS Code extension that fit the workflow I wanted, so I started building one.</p>
+<p>Now the video sits in an editor tab beside the code. That small change makes working on the hardware much easier: I can change something, look at the output, and keep going.</p>
+<img src="images/logs/log-2026-09-13-welcome-frameport-tomato-live.png" alt="Tomato OS displayed through FramePort" width="70%">
+<p><em>The FPGA running Tomato OS, viewed through the USB capture card inside FramePort.</em></p>
+<p><a href="https://tomato.tmarhguy.com">Tomato</a>, my 32-bit computer project, is the reason FramePort exists. It is also the first use case I want to get right. Other video devices can fit the same workflow, but for now: Tomato first.</p>
+</div>
+++++
+

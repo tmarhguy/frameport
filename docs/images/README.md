@@ -30,6 +30,6 @@ Manual figures live in `manual/` with sources in `docs/diagrams/`:
 | --- | --- | --- |
 | `manual/capture-pipeline.svg` | Hand-rendered from `docs/diagrams/capture-pipeline.mmd` (no local mermaid renderer; matches the checked-in tomato `.mmd` + `.svg` pair pattern) | Architecture chapter pipeline figure |
 
-The three user-provided screenshots show an earlier candidate. They are workflow illustrations, not current performance benchmarks. The source-picker image includes the user's device names as supplied. Do not infer phone-screen mirroring from the presence of an iPhone camera.
+The three user-provided screenshots show an earlier candidate. They are workflow illustrations, not current performance benchmarks. The source picker shows the devices macOS exposed for that session: a USB capture card, the FaceTime camera, the iPhone camera (the preview is you), and iPhone Desk View (the overhead camera). Those iPhone entries are cameras, not a copy of the phone's screen.
 
 Regenerate browser artifacts with `npm run test:ui`, inspect them, then copy only the images needed for documentation. Keep redundant test screenshots in ignored `artifacts/`.

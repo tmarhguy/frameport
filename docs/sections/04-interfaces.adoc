@@ -50,8 +50,8 @@ never reports an unapplied camera resolution.
 .Capture-mode picker — requested modes, not probed capabilities.
 image::capture-modes.png[Requested capture modes,60%,align="center"]
 
-.Source picker — a phone camera is not screen mirroring.
-image::source-picker.png[FramePort source picker,60%,align="center"]
+.Source picker. The iPhone camera shows you. Desk View is the overhead camera.
+image::source-picker.png[FramePort source picker. USB video. FaceTime camera. iPhone camera. Desk View. A screen. The test pattern.,60%,align="center"]
 
 === Save destinations
 

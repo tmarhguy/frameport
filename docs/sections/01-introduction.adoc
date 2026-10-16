@@ -7,13 +7,18 @@ the rest of the manual.
 === Purpose and scope
 
 FramePort is a VS Code extension that opens an HDMI capture card or
-other USB video device in an editor tab. It shows the feed beside your
-code, inspects individual pixels, saves a PNG screenshot, and records a
-silent MP4 clip without a separate video application.
+other USB video device in an editor tab. On macOS the same picker
+includes the cameras the system exposes, including the iPhone camera
+(the preview is you) and iPhone Desk View (the overhead camera). It
+shows the feed beside your code, inspects individual pixels, saves a
+PNG screenshot, and records a silent MP4 clip without a separate video
+application.
 
 What FramePort is not:
 
-* No audio capture, editing, broadcasting, or phone screen mirroring.
+* No audio capture, editing, or broadcasting. The iPhone camera and
+  Desk View are the phone's cameras. They are not a copy of the
+  iPhone's screen.
 * No background service or network video upload; capture starts only on
   an explicit action (see <<architecture>>).
 * Device capture is tested on macOS; Windows capture via FFmpeg `dshow`

@@ -1,0 +1,19 @@
+{
+  "title": "Example flow",
+  "subtitle": "Copy to docs/diagrams/<name>.json and adapt the rows",
+  "rows": [
+    [
+      "First step",
+      "Describe what happens first.",
+      "optional chip"
+    ],
+    [
+      "Second step",
+      "Describe what happens next."
+    ],
+    [
+      "Result",
+      "Describe the final state."
+    ]
+  ]
+}

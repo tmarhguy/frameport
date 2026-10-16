@@ -1,0 +1,23 @@
+{
+  "name": "Project",
+  "label": "Documentation",
+  "title": "Project documentation",
+  "description": "Setup, usage, architecture, and reference documentation for Project.",
+  "url": "",
+  "image": "",
+  "about": "#about",
+  "repository": "",
+  "website": "",
+  "source": "",
+  "groups": {
+    "0": "Documentation",
+    "3": "Author"
+  },
+  "branch": "main",
+  "hero": null,
+  "accent": "",
+  "accentDark": "",
+  "nested": ["engineering-log"],
+  "logs": "",
+  "searchHint": ""
+}

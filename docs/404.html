@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Page not found · __SITE_NAME__</title>
+  <meta name="description" content="This page is unavailable. Return to the __SITE_NAME__ documentation.">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('notebook-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch{}</script>
+  <style>
+    :root { color-scheme:light; --bg:#fafafa; --paper:#fff; --ink:#171717; --muted:#555; --line:#dedede; --button:#171717; --button-ink:#fff; --focus:#2563a6; font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    :root[data-theme=dark] { color-scheme:dark; --bg:#111; --paper:#171717; --ink:#ededed; --muted:#bdbdbd; --line:#373737; --button:#ededed; --button-ink:#171717; --focus:#8abbf0; }
+    * { box-sizing:border-box; }
+    body { min-height:100svh; margin:0; display:grid; place-items:center; padding:28px; background:var(--bg); color:var(--ink); }
+    main { width:min(100%,560px); padding:clamp(25px,6vw,48px); border:1px solid var(--line); border-radius:12px; background:var(--paper); }
+    .eyebrow { margin:0 0 10px; color:var(--muted); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    h1 { margin:0 0 12px; font-size:clamp(30px,7vw,44px); line-height:1.14; letter-spacing:-.035em; }
+    p { margin:0 0 25px; color:var(--muted); }
+    a { display:inline-flex; min-height:44px; align-items:center; padding:9px 16px; border-radius:7px; background:var(--button); color:var(--button-ink); font-weight:650; text-decoration:none; }
+    a:focus-visible { outline:3px solid var(--focus); outline-offset:3px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">__SITE_NAME__ · 404</div>
+    <h1>Page not found</h1>
+    <p>That address is not part of this documentation. The chapters and figures are available from the overview.</p>
+    <a id="home" href="__SITE_ROOT__">Return to the documentation</a>
+  </main>
+  <script>
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      document.getElementById('home').href = '/';
+  </script>
+</body>
+</html>
