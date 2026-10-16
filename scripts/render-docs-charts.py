@@ -80,6 +80,21 @@ def main():
     folder = ROOT/'docs/charts'
     if not folder.is_dir():
         return
+    try:
+        import matplotlib  # noqa: F401
+    except ImportError:
+        missing = []
+        for source in sorted(folder.glob('*.json')):
+            spec = json.loads(source.read_text())
+            target = ROOT / spec.get('dir', 'docs/images') / f'{source.stem}.svg'
+            if not target.is_file():
+                missing.append(str(target.relative_to(ROOT)))
+        if missing:
+            raise SystemExit(
+                'matplotlib is required to draw missing charts: ' + ', '.join(missing)
+            )
+        print('matplotlib is not installed; using the committed chart SVGs')
+        return
     site = json.loads((ROOT/'docs/site.json').read_text())
     accent = (site.get('accent') or '#171717').strip() or '#171717'
     for source in sorted(folder.glob('*.json')):
