@@ -26,8 +26,13 @@ test('resolveFfmpegPath finds Homebrew ffmpeg on macOS', () => {
   );
 });
 
-test('resolveFfmpegPath leaves default on non-darwin without Homebrew paths', () => {
-  assert.equal(resolveFfmpegPath('ffmpeg', 'linux', () => true), 'ffmpeg');
+test('resolveFfmpegPath finds common Linux install locations', () => {
+  assert.equal(resolveFfmpegPath('ffmpeg', 'linux', path => path === '/usr/bin/ffmpeg'), '/usr/bin/ffmpeg');
+  assert.equal(resolveFfmpegPath('ffmpeg', 'linux', path => path === '/usr/local/bin/ffmpeg'), '/usr/local/bin/ffmpeg');
+  assert.equal(resolveFfmpegPath('ffmpeg', 'linux', () => false), 'ffmpeg');
+});
+
+test('resolveFfmpegPath leaves the default on Windows', () => {
   assert.equal(resolveFfmpegPath('ffmpeg', 'win32', () => true), 'ffmpeg');
 });
 

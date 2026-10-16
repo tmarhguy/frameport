@@ -15,7 +15,7 @@ npm run test:ui
 
 Browser tests need an installed Playwright Chromium (`npx playwright install chromium` if absent) and permission to bind a local port. They generate screenshots under ignored `artifacts/`. These test the webview with mocked VS Code messaging; they are not evidence of device permissions or Extension Host behavior.
 
-Press F5 to open an Extension Development Host. `npm run test:host` runs the synthetic host suite in a temporary profile and opens a VS Code window. Set `VSCODE_TEST_BINARY` if the installed binary is elsewhere. Coordinate the GUI run with other work; it does not install the candidate into the normal profile.
+Press F5 to open an Extension Development Host. `npm run test:host` runs the synthetic host suite in a temporary profile and opens a VS Code window. Set `VSCODE_TEST_BINARY` if the installed binary is elsewhere. On Linux the launcher also checks `/usr/bin/code`, `/usr/share/code/code`, and `/snap/bin/code`. Coordinate the GUI run with other work; it does not install the candidate into the normal profile.
 
 Set `FRAMEPORT_TEST_FFMPEG` and, if necessary, `FRAMEPORT_TEST_FFPROBE` to override test executable paths. Test actual hardware separately with one application owning the device.
 
@@ -37,7 +37,7 @@ To see the real Extension Host modal without uninstalling Homebrew FFmpeg: open 
 ## Architecture
 
 ```text
-AVFoundation device / synthetic source
+AVFoundation, DirectShow, or V4L2 device / synthetic source
               ↓
        FFmpeg JPEG output
               ↓

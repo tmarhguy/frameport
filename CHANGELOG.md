@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.5 — 2026-10-15
+
+- Linux device capture uses V4L2. The source list reads `/sys/class/video4linux`, keeps the primary `/dev/videoN` node, and starts FFmpeg on that path. The previous Linux command reused the macOS `index:none` input, which does not open a V4L2 device, and the picker never offered hardware sources.
+- On Linux, a default `frameport.ffmpegPath` of `ffmpeg` also checks `/usr/bin/ffmpeg` and `/usr/local/bin/ffmpeg` for desktop launches whose PATH is thinner than a shell.
+- The Extension Host launcher looks for `code` at the usual Linux install paths.
+- The extension icon is 1024×1024 so the Marketplace accepts the package.
+
 ## 0.2.4 — 2026-09-27
 
 - Added Windows (`win32`) device capture support via FFmpeg `dshow` format, properly discovering and recording from local video sources on Windows.

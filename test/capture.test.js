@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
-const { parseDevices, JpegParser, captureArgs } = require('../src/capture');
+const { parseDevices, JpegParser, captureArgs, listV4l2Devices, enumerate, supportsHardwareCapture } = require('../src/capture');
 
 test('enumeration distinguishes video, screen, and audio devices on macOS', () => {
   assert.deepEqual(parseDevices('[avfoundation @ x] AVFoundation video devices:\n[avfoundation @ x] [0] USB Capture\n[avfoundation @ x] [1] Capture screen 0\n[avfoundation @ x] AVFoundation audio devices:\n[avfoundation @ x] [0] Microphone', false, 'darwin'), [{ index: '0', name: 'USB Capture' }]);
@@ -57,6 +57,52 @@ test('real FFmpeg synthetic capture produces complete JPEG frames', { timeout: 1
     assert.equal(code, 0, diagnostics);
     assert.equal(frames.length, 3);
   } finally { clearTimeout(timer); child.kill(); }
+});
+
+function v4l2Fixture(files, entries = Object.keys(files).map(path => path.split('/')[4]).filter((name, i, all) => name && all.indexOf(name) === i)) {
+  const sysRoot = '/sys/class/video4linux';
+  return {
+    sysRoot,
+    exists: path => path === sysRoot || entries.some(entry => path === `/dev/${entry}`) || path in files,
+    readdir: () => entries,
+    readFile: path => {
+      if (!(path in files)) throw new Error(`missing ${path}`);
+      return files[path];
+    }
+  };
+}
+
+test('linux enumeration keeps the primary V4L2 node and skips metadata nodes', () => {
+  const devices = listV4l2Devices(v4l2Fixture({
+    '/sys/class/video4linux/video0/name': 'USB Capture HDMI\n',
+    '/sys/class/video4linux/video0/index': '0\n',
+    '/sys/class/video4linux/video1/name': 'USB Capture HDMI\n',
+    '/sys/class/video4linux/video1/index': '1\n',
+    '/sys/class/video4linux/video2/name': 'Integrated Camera\n',
+    '/sys/class/video4linux/video2/index': '0\n'
+  }, ['video0', 'video1', 'video2', 'media0']));
+  assert.deepEqual(devices, [
+    { index: '/dev/video0', name: 'USB Capture HDMI' },
+    { index: '/dev/video2', name: 'Integrated Camera' }
+  ]);
+});
+
+test('linux enumeration is empty when sysfs is absent and does not spawn FFmpeg', async () => {
+  assert.deepEqual(listV4l2Devices({ exists: () => false }), []);
+  assert.deepEqual(await enumerate('ffmpeg-not-used', 'linux', { exists: () => false }), []);
+  assert.deepEqual(parseDevices('[0] USB Capture', false, 'linux'), []);
+  assert.equal(supportsHardwareCapture('linux'), true);
+});
+
+test('linux capture opens the device node instead of an AVFoundation input', () => {
+  const args = captureArgs({ index: '/dev/video0', name: 'USB Capture HDMI' }, { size: '1280x720', fps: 30 }, 'linux');
+  assert.equal(args[args.indexOf('-f') + 1], 'v4l2');
+  assert.equal(args[args.indexOf('-i') + 1], '/dev/video0');
+  assert.equal(args.includes('-an'), true);
+  assert.equal(args.some(part => String(part).includes(':none')), false);
+  const size = args.indexOf('-video_size');
+  const input = args.indexOf('-i');
+  assert.ok(size > -1 && size < input);
 });
 
 test('screen sources are explicitly included and keep native dimensions', () => {

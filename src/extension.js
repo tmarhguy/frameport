@@ -3,7 +3,7 @@ const http = require('node:http');
 const { randomBytes } = require('node:crypto');
 const { existsSync, mkdirSync } = require('node:fs');
 const { dirname } = require('node:path');
-const { enumerate } = require('./capture');
+const { enumerate, supportsHardwareCapture } = require('./capture');
 const { CaptureSession } = require('./session');
 const { renderView } = require('./view');
 const { Recorder } = require('./recorder');
@@ -115,17 +115,17 @@ function activate(context) {
   async function selectDevice() {
     const owner = panel, request = ++selection;
     const choices = [];
-    if (process.platform === 'darwin' || process.platform === 'win32') {
+    if (supportsHardwareCapture()) {
       try {
         const devices = await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: 'FramePort: finding capture devices…' }, () => enumerate(executable()));
-        choices.push(...devices.map(d => ({ ...d, label: d.name, description: d.screen ? 'Screen · requires screen recording permission' : `Video device ${d.index}` })));
+        choices.push(...devices.map(d => ({ ...d, label: d.name, description: d.screen ? 'Screen · requires screen recording permission' : (process.platform === 'linux' ? d.index : `Video device ${d.index}`) })));
       } catch (error) { void reportFFmpegProblem(vscode, error, `${error.message}. Check FFmpeg in settings.`); }
     }
     if (request !== selection || owner !== panel) return;
     choices.push({ label: 'Test pattern', name: 'Test pattern', demo: true, description: 'No camera required' });
     const preferred = context.workspaceState.get('preferredDevice');
-    const isSupported = process.platform === 'darwin' || process.platform === 'win32';
-    const selected = await vscode.window.showQuickPick(choices.map(d => ({ ...d, detail: d.name === preferred ? 'Previously selected in this workspace' : undefined })), { title: 'FramePort · Select source', placeHolder: isSupported ? 'Choose your USB capture device or camera' : 'Hardware capture currently requires macOS or Windows; try the test pattern' });
+    const isSupported = supportsHardwareCapture();
+    const selected = await vscode.window.showQuickPick(choices.map(d => ({ ...d, detail: d.name === preferred ? 'Previously selected in this workspace' : undefined })), { title: 'FramePort · Select source', placeHolder: isSupported ? 'Choose your USB capture device or camera' : 'Hardware capture currently requires macOS, Windows, or Linux; try the test pattern' });
     if (!selected || request !== selection || owner !== panel) return;
     device = selected;
     await context.workspaceState.update('preferredDevice', device.name);

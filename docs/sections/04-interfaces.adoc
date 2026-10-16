@@ -63,8 +63,9 @@ message instead of failing silently.
 === FFmpeg boundary
 
 FramePort requires FFmpeg with `libx264` on PATH. On macOS it also
-checks `/opt/homebrew/bin/ffmpeg` and `/usr/local/bin/ffmpeg`, or the
-`frameport.ffmpegPath` override. `ffprobe` next to the configured
+checks `/opt/homebrew/bin/ffmpeg` and `/usr/local/bin/ffmpeg`. On Linux
+it checks `/usr/bin/ffmpeg` and `/usr/local/bin/ffmpeg`. Either platform
+accepts a `frameport.ffmpegPath` override. `ffprobe` next to the configured
 FFmpeg serves the integration tests (`FRAMEPORT_TEST_FFMPEG`,
 `FRAMEPORT_TEST_FFPROBE` overrides). If FFmpeg is missing, FramePort
 offers a Homebrew install on macOS, the download guide, or settings —

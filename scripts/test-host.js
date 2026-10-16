@@ -17,7 +17,10 @@ const candidates = [
   '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code',
   '/Applications/Visual Studio Code.app/Contents/MacOS/Electron',
   join(process.env.LOCALAPPDATA || '', 'Programs', 'Microsoft VS Code', 'Code.exe'),
-  join(process.env.PROGRAMFILES || '', 'Microsoft VS Code', 'Code.exe')
+  join(process.env.PROGRAMFILES || '', 'Microsoft VS Code', 'Code.exe'),
+  '/usr/bin/code',
+  '/usr/share/code/code',
+  '/snap/bin/code'
 ].filter(Boolean);
 const { existsSync } = require('node:fs');
 const binary = candidates.find(p => { try { return existsSync(p); } catch { return false; } });

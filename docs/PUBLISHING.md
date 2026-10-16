@@ -1,8 +1,8 @@
 # Packaging and publishing
 
-![release](https://img.shields.io/badge/release-0.2.4-636363?style=flat-square)
+![release](https://img.shields.io/badge/release-0.2.5-636363?style=flat-square)
 
-FramePort is currently **0.2.4** on the Marketplace (not marked preview). Building a VSIX alone does not update the listing: re-upload the exact reviewed artifact. Marketplace versions are immutable, so listing-only fixes ship as a patch bump.
+The release candidate is **0.2.5**. The Marketplace listing stays at **0.2.4** until that VSIX is uploaded (not marked preview). Building a VSIX alone does not update the listing: re-upload the exact reviewed artifact. Marketplace versions are immutable, so listing-only fixes ship as a patch bump.
 
 ## Before release
 
@@ -28,8 +28,8 @@ Private-preview exception: while the repository is private, install locally with
 The private preview command bypasses a missing license file. After terms are selected, use `npm run package:public` instead. Inspect the actual archive, not only its filename:
 
 ```sh
-unzip -l frameport-0.2.4.vsix
-shasum -a 256 frameport-0.2.4.vsix
+unzip -l frameport-0.2.5.vsix
+shasum -a 256 frameport-0.2.5.vsix
 ```
 
 Expect the manifest, README, changelog, `src/`, and runtime `media/`. No tests, Chromium, node_modules, developer notes or documentation screenshots belong in the runtime archive. Test installation through **Extensions: Install from VSIX…** in a clean profile.

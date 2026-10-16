@@ -28,7 +28,7 @@ are immutable, so listing-only fixes ship as a patch bump.
 
 A good archive holds the manifest, README, CHANGELOG, `src/`, and
 runtime `media/` only. Excluded via `.vscodeignore`: tests, scripts,
-`docs/`, `artifacts/`, `test-host/`, `node_modules`, and the demo MP4
+`docs/`, `build/`, `docker/`, `Makefile`, `artifacts/`, `test-host/`, `node_modules`, and the demo MP4
 (`media/screenshots/*.mp4` loads from the repository URL, not the
 package). The demo GIF stays packaged so the Extension Details page
 plays it offline while the repository is private.
@@ -37,8 +37,8 @@ Inspect the actual archive, not only its filename:
 
 [source,bash]
 ----
-unzip -l frameport-0.2.4.vsix
-shasum -a 256 frameport-0.2.4.vsix
+unzip -l frameport-0.2.5.vsix
+shasum -a 256 frameport-0.2.5.vsix
 ----
 
 Install it through *Extensions: Install from VSIX…* in a clean profile.

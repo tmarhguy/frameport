@@ -14,8 +14,8 @@
 :idseparator: -
 :experimental:
 :reproducible:
-:revnumber: 0.2.4
-:revdate: 2026-10-01
+:revnumber: 0.2.5
+:revdate: 2026-10-15
 
 // Project identity lives here. Theme files under theme/ contain no
 // hardcoded project names and work unchanged in other repositories.
@@ -38,7 +38,7 @@
     <a class="cta cta-primary" href="https://open-vsx.org/extension/tmarhguy/frameport">View on Open VSX</a>
     <a class="cta cta-secondary" href="https://github.com/tmarhguy/frameport">GitHub</a>
   </p>
-  <p class="hero-meta">0.2.4 · JavaScript · FFmpeg · VS Code API</p>
+  <p class="hero-meta">0.2.5 · JavaScript · FFmpeg · VS Code API</p>
 </div>
 ++++
 

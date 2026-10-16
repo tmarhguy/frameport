@@ -21,8 +21,11 @@ What FramePort is not:
   iPhone's screen.
 * No background service or network video upload; capture starts only on
   an explicit action (see <<architecture>>).
-* Device capture is tested on macOS; Windows capture via FFmpeg `dshow`
-  is new in `0.2.4`; Linux shows a test pattern only.
+* Device capture is implemented for macOS (AVFoundation), Windows
+  (FFmpeg `dshow`, new in `0.2.4`), and Linux (V4L2 `/dev/videoN`,
+  new in `0.2.5`).
+  Physical devices are verified on macOS. Linux lists the primary
+  capture node and skips the metadata node that shares its name.
 * Desktop VS Code `1.95+` in a trusted local workspace only. Remote,
   browser-only, and untrusted workspaces are unsupported.
 

@@ -5,9 +5,9 @@
   <a href="https://github.com/tmarhguy/frameport/actions/workflows/ci.yml"><img src="https://github.com/tmarhguy/frameport/actions/workflows/ci.yml/badge.svg" alt="CI: Validate extension" /></a>
   <a href="https://marketplace.visualstudio.com/items?itemName=tmarhguy.frameport"><img src="https://img.shields.io/visual-studio-marketplace/v/tmarhguy.frameport?style=flat-square" alt="Marketplace version" /></a>
   <a href="https://open-vsx.org/extension/tmarhguy/frameport"><img src="https://img.shields.io/open-vsx/v/tmarhguy/frameport?style=flat-square" alt="Open VSX version" /></a>
-  <img src="https://img.shields.io/badge/release-0.2.4-636363?style=flat-square" alt="Release: 0.2.4" />
+  <img src="https://img.shields.io/badge/release-0.2.5-636363?style=flat-square" alt="Release: 0.2.5" />
   <img src="https://img.shields.io/badge/VS_Code-1.95%2B-007ACC?style=flat-square" alt="VS Code 1.95 or newer" />
-  <img src="https://img.shields.io/badge/hardware_capture-macOS-333333?style=flat-square" alt="Hardware capture: macOS" />
+  <img src="https://img.shields.io/badge/hardware_capture-macOS_%C2%B7_Windows_%C2%B7_Linux-333333?style=flat-square" alt="Hardware capture: macOS, Windows, and Linux" />
 </p>
 
 <p align="center">
@@ -72,18 +72,18 @@ I needed to see my [Tomato](https://tomato.tmarhguy.com) FPGA's HDMI output whil
 ## Requirements
 
 - Desktop VS Code **1.95+** in a trusted local workspace (remote, browser-only, and untrusted workspaces are unsupported).
-- **macOS** for device capture. Windows/Linux: test pattern only.
-- **FFmpeg** with `libx264` on PATH. FramePort also checks `/opt/homebrew/bin/ffmpeg` and `/usr/local/bin/ffmpeg` on macOS, or set `frameport.ffmpegPath`.
-- Camera and screen-recording permission when macOS asks.
+- **macOS, Windows, or Linux** for device capture (AVFoundation, DirectShow, or V4L2). The test pattern works on every desktop platform.
+- **FFmpeg** with `libx264` on PATH. FramePort also checks `/opt/homebrew/bin/ffmpeg` and `/usr/local/bin/ffmpeg` on macOS, and `/usr/bin/ffmpeg` and `/usr/local/bin/ffmpeg` on Linux, or set `frameport.ffmpegPath`.
+- Camera and screen-recording permission when macOS asks. On Linux, read access to `/dev/videoN` (usually membership in the `video` group).
 
-Device capture is currently tested on macOS; Windows and Linux support is under development.
+Physical device capture is verified on macOS. Windows (`dshow`) and Linux (V4L2) selection and FFmpeg arguments are covered by unit tests; confirm a capture card on those systems locally. Linux lists the primary V4L2 node and skips the metadata node that shares its name.
 
 ## Get started
 
-1. Install **0.2.4** from either store:
+1. Install **0.2.5** from either store:
    - [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=tmarhguy.frameport) (Extensions view → search `FramePort`)
    - [Open VSX](https://open-vsx.org/extension/tmarhguy/frameport) (Cursor, VSCodium, and other Open VSX clients)
-   - Or **Extensions: Install from VSIX…** with `frameport-0.2.4.vsix`
+   - Or **Extensions: Install from VSIX…** with `frameport-0.2.5.vsix`
 2. Run **FramePort: Open Capture Device** → **Select device**, or **Test pattern** to verify without hardware.
 3. Pick a capture mode your device supports. Allow camera access if macOS asks.
 4. Use Pause, Screenshot, Record, Focus, and Diagnostics from the panel toolbar or Command Palette.
@@ -123,7 +123,7 @@ FFmpeg is auto-found in Homebrew paths or PATH; override with `frameport.ffmpegP
 One FFmpeg process while viewing, one more while recording; frames are skipped rather than queued under load, so preview FPS is observed output, not latency. No audio, editing, or broadcasting. The iPhone camera and Desk View are the phone's cameras on the Mac, not a copy of the phone's screen. Browser-only VS Code is unsupported. The transport is JPEG, so PNG screenshots are not lossless.
 
 - **FFmpeg won't launch:** use the Install via Homebrew / Install guide actions when offered, or set `frameport.ffmpegPath`; VS Code's PATH differs from the terminal's.
-- **No frames:** check permissions, cables, other apps holding the device, and a lower mode; see **Diagnostics**.
+- **No frames:** check permissions, cables, other apps holding the device, and a lower mode; see **Diagnostics**. On Linux, confirm you can open `/dev/videoN` (`groups` should include `video`).
 - **Recording fails:** confirm the encoder exists in your FFmpeg build and pick a new writable filename.
 - **Black frames:** some cards emit black when HDMI drops; the video alone can't always tell.
 
@@ -137,7 +137,7 @@ Install the VSIX via **Extensions: Install from VSIX…**, or press **F5** to ha
 
 ## Release Notes
 
-See [CHANGELOG.md](https://github.com/tmarhguy/frameport/blob/main/CHANGELOG.md): `0.2.4` adds Windows device capture via FFmpeg `dshow`; `0.2.3` fixes store listing images and packaging; `0.2.2` adds missing-FFmpeg recovery, leaves the Marketplace preview channel, and autosaves captures under `media/`; `0.2.1` refreshes the listing; `0.2.0` adds MP4 recording, native-size screen sources, an optional VideoToolbox encoder, and hardened save handling.
+See [CHANGELOG.md](https://github.com/tmarhguy/frameport/blob/main/CHANGELOG.md): `0.2.5` adds Linux device capture via V4L2; `0.2.4` adds Windows device capture via FFmpeg `dshow`; `0.2.3` fixes store listing images and packaging; `0.2.2` adds missing-FFmpeg recovery, leaves the Marketplace preview channel, and autosaves captures under `media/`; `0.2.1` refreshes the listing; `0.2.0` adds MP4 recording, native-size screen sources, an optional VideoToolbox encoder, and hardened save handling.
 
 ## Author and license
 

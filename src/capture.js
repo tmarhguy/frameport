@@ -1,8 +1,17 @@
 const { spawn } = require('node:child_process');
+const { existsSync, readdirSync, readFileSync } = require('node:fs');
+
+const V4L2_SYS = '/sys/class/video4linux';
+
+function supportsHardwareCapture(platform = process.platform) {
+  return platform === 'darwin' || platform === 'win32' || platform === 'linux';
+}
 
 // FFmpeg emits device diagnostics on stderr, including for successful enumeration.
+// Linux is not parsed from that text: the v4l2 demuxer has no -list_devices mode.
 function parseDevices(text, includeScreens = false, platform = process.platform) {
   const devices = [];
+  if (platform === 'linux') return devices;
   if (platform === 'win32') {
     for (const line of text.split(/\r?\n/)) {
       const dshowMatch = line.match(/\]\s+"([^"]+)"\s+\(video\)/);
@@ -24,11 +33,37 @@ function parseDevices(text, includeScreens = false, platform = process.platform)
   return devices;
 }
 
-function enumerate(executable, platform = process.platform) {
+// Primary V4L2 node only. UVC drivers also publish a metadata node at index 1
+// under the same name; opening that node does not produce frames.
+function listV4l2Devices({
+  sysRoot = V4L2_SYS,
+  exists = existsSync,
+  readdir = readdirSync,
+  readFile = readFileSync
+} = {}) {
+  if (!exists(sysRoot)) return [];
+  let entries = [];
+  try { entries = readdir(sysRoot); } catch { return []; }
+  const devices = [];
+  for (const entry of entries) {
+    if (!/^video\d+$/.test(entry)) continue;
+    const node = `/dev/${entry}`;
+    if (!exists(node)) continue;
+    let name = entry;
+    try { name = String(readFile(`${sysRoot}/${entry}/name`, 'utf8')).trim() || entry; } catch {}
+    let index = '0';
+    try { index = String(readFile(`${sysRoot}/${entry}/index`, 'utf8')).trim() || '0'; } catch {}
+    if (index !== '0') continue;
+    devices.push({ index: node, name });
+  }
+  return devices.sort((a, b) => a.index.localeCompare(b.index, undefined, { numeric: true }));
+}
+
+function enumerate(executable, platform = process.platform, v4l2) {
+  if (platform === 'linux') return Promise.resolve(listV4l2Devices(v4l2));
   return new Promise((resolve, reject) => {
     let format = 'avfoundation';
     if (platform === 'win32') format = 'dshow';
-    else if (platform === 'linux') format = 'v4l2';
 
     const input = platform === 'win32' ? 'dummy' : '';
 
@@ -66,9 +101,14 @@ function captureArgs(device, mode, platform = process.platform) {
     return ['-hide_banner', '-loglevel', 'warning', '-re', '-f', 'lavfi', '-i', `testsrc2=size=${mode.size}:rate=${mode.fps}`, '-an', '-c:v', 'mjpeg', '-q:v', '4', '-f', 'image2pipe', 'pipe:1'];
   }
 
+  if (platform === 'linux') {
+    // Device path, not AVFoundation's "video:audio" token. `:none` makes v4l2
+    // look for a node that does not exist.
+    return ['-hide_banner', '-loglevel', 'warning', '-f', 'v4l2', '-framerate', String(mode.fps), '-video_size', mode.size, '-i', device.index, '-an', '-c:v', 'mjpeg', '-q:v', '4', '-f', 'image2pipe', 'pipe:1'];
+  }
+
   let format = 'avfoundation';
   if (platform === 'win32') format = 'dshow';
-  else if (platform === 'linux') format = 'v4l2';
 
   const inputId = platform === 'win32' ? device.index : `${device.index}:none`;
   const inputArgs = ['-f', format, '-framerate', String(mode.fps), ...(device.screen ? [] : ['-video_size', mode.size]), '-i', inputId];
@@ -76,4 +116,4 @@ function captureArgs(device, mode, platform = process.platform) {
   return ['-hide_banner', '-loglevel', 'warning', ...inputArgs, '-an', '-c:v', 'mjpeg', '-q:v', '4', '-f', 'image2pipe', 'pipe:1'];
 }
 
-module.exports = { parseDevices, enumerate, JpegParser, captureArgs };
+module.exports = { parseDevices, enumerate, listV4l2Devices, supportsHardwareCapture, JpegParser, captureArgs };

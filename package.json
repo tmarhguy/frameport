@@ -2,7 +2,7 @@
   "name": "frameport",
   "displayName": "FramePort",
   "description": "View, inspect, screenshot and record local video sources (HDMI) inside VS Code.",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "publisher": "tmarhguy",
   "engines": {
     "vscode": "^1.95.0"
@@ -71,7 +71,7 @@
           "type": "string",
           "default": "ffmpeg",
           "scope": "machine",
-          "description": "Path to an existing FFmpeg executable. On Apple Silicon, commonly /opt/homebrew/bin/ffmpeg."
+          "description": "Path to an existing FFmpeg executable. On Apple Silicon, commonly /opt/homebrew/bin/ffmpeg. On Linux, commonly /usr/bin/ffmpeg."
         },
         "frameport.previewFps": {
           "type": "number",

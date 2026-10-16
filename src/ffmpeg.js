@@ -1,15 +1,15 @@
 const { existsSync } = require('node:fs');
 
 const HOMEBREW_FFMPEG = ['/opt/homebrew/bin/ffmpeg', '/usr/local/bin/ffmpeg'];
+const LINUX_FFMPEG = ['/usr/bin/ffmpeg', '/usr/local/bin/ffmpeg'];
 const HOMEBREW_BREW = ['/opt/homebrew/bin/brew', '/usr/local/bin/brew'];
 const GUIDE_URL = 'https://ffmpeg.org/download.html';
 const BREW_URL = 'https://brew.sh';
 
 function resolveFfmpegPath(configured = 'ffmpeg', platform = process.platform, exists = existsSync) {
   if (configured && configured !== 'ffmpeg') return configured;
-  if (platform === 'darwin') {
-    for (const path of HOMEBREW_FFMPEG) if (exists(path)) return path;
-  }
+  const candidates = platform === 'darwin' ? HOMEBREW_FFMPEG : platform === 'linux' ? LINUX_FFMPEG : [];
+  for (const path of candidates) if (exists(path)) return path;
   return configured || 'ffmpeg';
 }
 

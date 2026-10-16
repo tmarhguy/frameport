@@ -5,6 +5,9 @@ node_modules/**
 test/**
 scripts/**
 docs/**
+build/**
+docker/**
+Makefile
 artifacts/**
 media/screenshots/*.mp4
 test-host/**

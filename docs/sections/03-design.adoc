@@ -7,10 +7,10 @@ pipeline. It is an implementation description, not a second contract.
 === Capture and session
 
 `src/capture.js` enumerates sources and builds the FFmpeg capture
-arguments per OS (AVFoundation on macOS, `dshow` on Windows, synthetic
-test pattern elsewhere). It frames the JPEG output stream for the
-bounded parser, which keeps the latest frame and skips — never queues —
-under load.
+arguments per OS (AVFoundation on macOS, `dshow` on Windows, V4L2 on
+Linux, plus a synthetic test pattern on every platform). It frames the
+JPEG output stream for the bounded parser, which keeps the latest frame
+and skips — never queues — under load.
 
 `src/session.js` serializes the capture lifecycle so restarts never
 touch the device concurrently. Stale callbacks and frames from a stopped

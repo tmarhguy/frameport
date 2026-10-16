@@ -6,8 +6,15 @@ the repository proves.
 
 === Platform boundaries
 
-* Hardware capture is tested on macOS. Windows capture via FFmpeg
-  `dshow` is new in `0.2.4`; Linux shows a test pattern only.
+* Hardware capture is implemented for macOS (AVFoundation), Windows
+  (FFmpeg `dshow`, new in `0.2.4`), and Linux (V4L2, new in `0.2.5`). Physical devices
+  are verified on macOS. Linux and Windows device selection are covered
+  by unit tests; a local capture card on those systems still needs a
+  manual check.
+* On Linux, FramePort keeps the sysfs index-0 node (`/dev/video0` for a
+  typical grabber) and skips metadata nodes. Opening the device
+  requires read permission, usually the `video` group. The requested
+  mode has to be one the device accepts.
 * Desktop VS Code `1.95+` in a trusted local workspace is required.
   Remote, browser-only, and untrusted workspaces are unsupported.
 * macOS camera and screen-recording permission is requested when

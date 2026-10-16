@@ -6,11 +6,12 @@ executable or directly checkable.
 
 === Quick start
 
-. Install `0.2.4` from the VS Code Marketplace or Open VSX, or install
-  `frameport-0.2.4.vsix` via *Extensions: Install from VSIX…*.
+. Install `0.2.5` from the VS Code Marketplace or Open VSX, or install
+  `frameport-0.2.5.vsix` via *Extensions: Install from VSIX…*.
 . Run *FramePort: Open Capture Device*, then *Select device* — or *Test
   pattern* to verify without hardware. On macOS the list can include
-  the iPhone camera (the preview is you) and Desk View.
+  the iPhone camera (the preview is you) and Desk View. On Linux the
+  list is V4L2 capture nodes such as `/dev/video0`.
 . Pick a capture mode the device supports. Allow camera access if macOS
   asks.
 . Use Pause, Screenshot, Record, Focus, and Diagnostics from the panel
